@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.movtery.guide"
+    namespace = "com.shoyoomc.cyberneticlauncher.guide"
     compileSdk = 37
 
     defaultConfig {

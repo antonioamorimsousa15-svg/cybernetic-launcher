@@ -1,7 +1,7 @@
 package org.lwjgl.glfw;
 
-import static com.movtery.zalithlauncher.bridge.ZLBridgeStatesKt.CURSOR_DISABLED;
-import static com.movtery.zalithlauncher.bridge.ZLBridgeStatesKt.CURSOR_ENABLED;
+import static com.shoyoomc.cyberneticlauncher.bridge.ZLBridgeStatesKt.CURSOR_DISABLED;
+import static com.shoyoomc.cyberneticlauncher.bridge.ZLBridgeStatesKt.CURSOR_ENABLED;
 
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -16,17 +16,17 @@ import android.view.MotionEvent;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
-import com.movtery.inputmap.keycodes.LwjglGlfwKeycode;
-import com.movtery.zalithlauncher.BuildKeys;
-import com.movtery.zalithlauncher.bridge.CursorShape;
-import com.movtery.zalithlauncher.bridge.LoggerBridge;
-import com.movtery.zalithlauncher.bridge.NativeLibraryLoader;
-import com.movtery.zalithlauncher.bridge.ZLBridgeStates;
-import com.movtery.zalithlauncher.bridge.ZLNativeInvoker;
-import com.movtery.zalithlauncher.context.ContextsKt;
-import com.movtery.zalithlauncher.game.input.EfficientAndroidLWJGLKeycode;
-import com.movtery.zalithlauncher.game.sdl.DirectGamepadEnableHandler;
-import com.movtery.zalithlauncher.game.sdl.SdlBridge;
+import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.LwjglGlfwKeycode;
+import com.shoyoomc.cyberneticlauncher.BuildKeys;
+import com.shoyoomc.cyberneticlauncher.bridge.CursorShape;
+import com.shoyoomc.cyberneticlauncher.bridge.LoggerBridge;
+import com.shoyoomc.cyberneticlauncher.bridge.NativeLibraryLoader;
+import com.shoyoomc.cyberneticlauncher.bridge.ZLBridgeStates;
+import com.shoyoomc.cyberneticlauncher.bridge.ZLNativeInvoker;
+import com.shoyoomc.cyberneticlauncher.context.ContextsKt;
+import com.shoyoomc.cyberneticlauncher.game.input.EfficientAndroidLWJGLKeycode;
+import com.shoyoomc.cyberneticlauncher.game.sdl.DirectGamepadEnableHandler;
+import com.shoyoomc.cyberneticlauncher.game.sdl.SdlBridge;
 
 import org.libsdl.app.SDLActivity;
 import org.libsdl.app.SDLSurface;

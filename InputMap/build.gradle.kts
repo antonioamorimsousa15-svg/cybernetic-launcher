@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.movtery.inputmap"
+    namespace = "com.shoyoomc.cyberneticlauncher.inputmap"
     compileSdk {
         version = release(37)
     }

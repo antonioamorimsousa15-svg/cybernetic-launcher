@@ -26,7 +26,7 @@ import android.view.View;
 
 import androidx.annotation.Keep;
 
-import com.movtery.zalithlauncher.utils.logging.Logger;
+import com.shoyoomc.cyberneticlauncher.utils.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;

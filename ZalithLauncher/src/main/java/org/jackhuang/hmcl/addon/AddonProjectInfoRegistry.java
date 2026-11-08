@@ -17,7 +17,7 @@
  */
 package org.jackhuang.hmcl.addon;
 
-import com.movtery.zalithlauncher.utils.logging.Logger;
+import com.shoyoomc.cyberneticlauncher.utils.logging.Logger;
 
 import org.jackhuang.hmcl.addon.mod.ModProjectInfo;
 import org.jackhuang.hmcl.modpack.ModpackProjectInfo;

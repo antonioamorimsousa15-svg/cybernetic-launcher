@@ -15,7 +15,7 @@ plugins {
     id("com.movtery.buildkeys")
 }
 
-val zalithPackageName = "com.movtery.zalithlauncher"
+val zalithPackageName = "com.shoyoomc.cyberneticlauncher"
 val launcherAPPName = project.findProperty("launcher_app_name") as? String ?: error("The \"launcher_app_name\" property is not set in gradle.properties.")
 val launcherName = project.findProperty("launcher_name") as? String ?: error("The \"launcher_name\" property is not set in gradle.properties.")
 val launcherShortName = project.findProperty("launcher_short_name") as? String ?: error("The \"launcher_short_name\" property is not set in gradle.properties.")
@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.shoyoomc.cybernetic.launcher"
+        applicationId = "com.shoyoomc.cyberneticlauncher"
         minSdk = 26
         targetSdk = 34
         versionCode = launcherVersionCode

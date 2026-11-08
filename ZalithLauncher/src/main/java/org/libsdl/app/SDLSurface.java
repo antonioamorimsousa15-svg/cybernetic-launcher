@@ -32,7 +32,7 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
-import com.movtery.zalithlauncher.game.sdl.SdlBridge;
+import com.shoyoomc.cyberneticlauncher.game.sdl.SdlBridge;
 
 
 /**

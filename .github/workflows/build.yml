@@ -66,8 +66,7 @@ jobs:
 
       - name: Install cargo-ndk
         run: |
-          cargo install cargo-ndk --version 4.1.2 --locked
-          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+          cargo install cargo-ndk --locked
           cargo ndk --version
 
       - name: Setup Android NDK

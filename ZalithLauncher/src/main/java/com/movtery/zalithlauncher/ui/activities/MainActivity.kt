@@ -224,19 +224,7 @@ class MainActivity : BaseAppCompatActivity() {
         //初始化通知管理（创建渠道）
         NotificationManager.initManager(this)
 
-        //检查更新
-        if (!isImporting && launcherUpgradeViewModel.operation == LauncherUpgradeOperation.None) {
-            lifecycleScope.launch {
-                launcherUpgradeViewModel.checkOnAppStart()
-            }
-        }
-
-        //拉取当月赞助者数据
-        lifecycleScope.launch {
-            sponsorsViewModel.loadOnStart(
-                showLastMonth = GuideProgress.isPlayed(GuideKeys.Main) && !isImporting
-            )
-        }
+        // CYBERNETIC: sem verificação de atualização nem lista de patrocinadores do ZL2
 
         //错误信息展示
         lifecycleScope.launch {
@@ -414,7 +402,7 @@ class MainActivity : BaseAppCompatActivity() {
                 }
 
                 //显示赞助支持的小弹窗
-                if (!isImporting && finishedGame.state >= 100 && showSponsorship.state) {
+                if (false && !isImporting && finishedGame.state >= 100 && showSponsorship.state) {
                     SimpleAlertDialog(
                         title = stringResource(R.string.about_sponsor),
                         text = stringResource(R.string.game_saponsorship_finished_game, finishedGame.state),

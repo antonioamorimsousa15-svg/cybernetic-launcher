@@ -83,6 +83,45 @@ private val embermireLight = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight.embermire,
 )
 
+/** Tema "Vermelho Shoyo": preto profundo com vermelho. Usado também no modo claro. */
+private val shoyoRedDark = darkColorScheme(
+    primary = Color(0xFFFF4D5A),
+    onPrimary = Color(0xFF2A0006),
+    primaryContainer = Color(0xFF6B0F1B),
+    onPrimaryContainer = Color(0xFFFFDADC),
+    secondary = Color(0xFFE8A0A6),
+    onSecondary = Color(0xFF3A0D12),
+    secondaryContainer = Color(0xFF3F161B),
+    onSecondaryContainer = Color(0xFFFFD9DB),
+    tertiary = Color(0xFFD9A85F),
+    onTertiary = Color(0xFF3A2600),
+    tertiaryContainer = Color(0xFF55380A),
+    onTertiaryContainer = Color(0xFFFFDDA8),
+    error = Color(0xFFFFB4AB),
+    onError = Color(0xFF690005),
+    errorContainer = Color(0xFF93000A),
+    onErrorContainer = Color(0xFFFFDAD6),
+    background = Color(0xFF0A0305),
+    onBackground = Color(0xFFF2E6E7),
+    surface = Color(0xFF0A0305),
+    onSurface = Color(0xFFF2E6E7),
+    surfaceVariant = Color(0xFF2E1519),
+    onSurfaceVariant = Color(0xFFD8BFC2),
+    outline = Color(0xFF9A7378),
+    outlineVariant = Color(0xFF4D2B30),
+    scrim = Color(0xFF000000),
+    inverseSurface = Color(0xFFF2E6E7),
+    inverseOnSurface = Color(0xFF2A1A1D),
+    inversePrimary = Color(0xFFB3202F),
+    surfaceDim = Color(0xFF0A0305),
+    surfaceBright = Color(0xFF2E1B1F),
+    surfaceContainerLowest = Color(0xFF060203),
+    surfaceContainerLow = Color(0xFF130709),
+    surfaceContainer = Color(0xFF1A0B0E),
+    surfaceContainerHigh = Color(0xFF251216),
+    surfaceContainerHighest = Color(0xFF301A1F),
+)
+
 private val embermireDark = darkColorScheme(
     primary = primaryDark.embermire,
     onPrimary = onPrimaryDark.embermire,
@@ -622,6 +661,7 @@ fun ZalithLauncherTheme(
             }
 
             darkTheme -> when (colorTheme) {
+                ColorThemeType.SHOYO_RED -> shoyoRedDark
                 ColorThemeType.EMBERMIRE -> embermireDark
                 ColorThemeType.VELVET_ROSE -> velvetRoseDark
                 ColorThemeType.MISTWAVE -> mistwaveDark
@@ -637,6 +677,7 @@ fun ZalithLauncherTheme(
             }
 
             else -> when (colorTheme) {
+                ColorThemeType.SHOYO_RED -> shoyoRedDark
                 ColorThemeType.EMBERMIRE -> embermireLight
                 ColorThemeType.VELVET_ROSE -> velvetRoseLight
                 ColorThemeType.MISTWAVE -> mistwaveLight

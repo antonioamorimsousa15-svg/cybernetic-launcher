@@ -158,6 +158,10 @@ fun MainScreen(
     val mainScreenKey = screenBackStackModel.mainScreen.currentKey
     val inLauncherScreen = mainScreenKey == null || mainScreenKey is NormalNavKey.LauncherMain
 
+    // SHOYO: menu lateral que esconde ao escolher uma seção (tela cheia)
+    var sidebarOpen by remember { mutableStateOf(true) }
+    LaunchedEffect(mainScreenKey) { sidebarOpen = inLauncherScreen }
+
     val isBackgroundValid = LocalBackgroundViewModel.current?.isValid == true
     val launcherBackgroundOpacity = AllSettings.launcherBackgroundOpacity.state.toFloat() / 100f
 
@@ -212,13 +216,56 @@ fun MainScreen(
                 changeExpandedState = {
                     changeTasksExpandedState()
                 },
+                onMenu = { sidebarOpen = !sidebarOpen },
             )
 
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
+              if (sidebarOpen) {
+                ShoyoSidebar(
+                    modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
+                    inHome = inLauncherScreen,
+                    inVersions = mainScreenKey is NormalNavKey.VersionsManager,
+                    inDownload = mainScreenKey is NestedNavKey.Download,
+                    inAccounts = mainScreenKey is NormalNavKey.AccountManager,
+                    inMultiplayer = mainScreenKey is NormalNavKey.Multiplayer,
+                    inSettings = mainScreenKey is NestedNavKey.Settings,
+                    onHome = toMainScreen,
+                    onVersions = {
+                        screenBackStackModel.mainScreen.removeAndNavigateTo(
+                            removes = screenBackStackModel.clearBeforeNavKeys,
+                            screenKey = NormalNavKey.VersionsManager
+                        )
+                    },
+                    onDownload = { screenBackStackModel.navigateToDownload() },
+                    onAccounts = {
+                        screenBackStackModel.mainScreen.removeAndNavigateTo(
+                            removes = screenBackStackModel.clearBeforeNavKeys,
+                            screenKey = NormalNavKey.AccountManager()
+                        )
+                    },
+                    onMultiplayer = {
+                        screenBackStackModel.mainScreen.removeAndNavigateTo(
+                            removes = screenBackStackModel.clearBeforeNavKeys,
+                            screenKey = NormalNavKey.Multiplayer
+                        )
+                    },
+                    onSettings = {
+                        screenBackStackModel.mainScreen.removeAndNavigateTo(
+                            removes = screenBackStackModel.clearBeforeNavKeys,
+                            screenKey = screenBackStackModel.settingsScreen
+                        )
+                    }
+                )
+              }
+              Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+              ) {
                 NavStateHost(rootKey = screenBackStackModel.mainScreen) {
                     NavigationUI(
                         modifier = Modifier.fillMaxSize(),
@@ -241,6 +288,7 @@ fun MainScreen(
                 ) {
                     changeTasksExpandedState()
                 }
+              }
             }
         }
     }
@@ -261,6 +309,7 @@ private fun <E: TitledNavKey> TopBar(
     toMultiplayerScreen: () -> Unit,
     openFileManager: () -> Unit,
     changeExpandedState: () -> Unit,
+    onMenu: () -> Unit,
 ) {
     val festivals = LocalFestivals.current
 
@@ -285,6 +334,17 @@ private fun <E: TitledNavKey> TopBar(
                     }
                     .fillMaxHeight()
             ) {
+                Spacer(Modifier.width(8.dp))
+                IconButton(
+                    modifier = Modifier.fillMaxHeight(),
+                    onClick = onMenu
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_menu),
+                        contentDescription = null
+                    )
+                }
+
                 AnimatedVisibility(
                     visible = !inLauncherScreen
                 ) {

@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.shoyoomc.cyberneticlauncher.cyber.theme.ParaShape
 import com.shoyoomc.cyberneticlauncher.ui.components.BackgroundCard
 import com.shoyoomc.cyberneticlauncher.ui.components.TitleAndSummary
 
@@ -157,48 +158,7 @@ fun rememberSettingsCardShape(
     outerShape: Dp = 28.dp,
     innerShape: Dp = 4.dp
 ): Shape {
-    return remember(position, outerShape, innerShape) {
-        when (position) {
-            CardPosition.Top -> RoundedCornerShape(
-                topStart = outerShape,
-                topEnd = outerShape,
-                bottomStart = innerShape,
-                bottomEnd = innerShape
-            )
-            CardPosition.TopStart -> RoundedCornerShape(
-                topStart = outerShape,
-                topEnd = innerShape,
-                bottomStart = innerShape,
-                bottomEnd = innerShape
-            )
-            CardPosition.TopEnd -> RoundedCornerShape(
-                topStart = innerShape,
-                topEnd = outerShape,
-                bottomStart = innerShape,
-                bottomEnd = innerShape
-            )
-            CardPosition.Middle -> RoundedCornerShape(innerShape)
-            CardPosition.Bottom -> RoundedCornerShape(
-                topStart = innerShape,
-                topEnd = innerShape,
-                bottomStart = outerShape,
-                bottomEnd = outerShape
-            )
-            CardPosition.BottomStart -> RoundedCornerShape(
-                topStart = innerShape,
-                topEnd = innerShape,
-                bottomStart = outerShape,
-                bottomEnd = innerShape
-            )
-            CardPosition.BottomEnd -> RoundedCornerShape(
-                topStart = innerShape,
-                topEnd = innerShape,
-                bottomStart = innerShape,
-                bottomEnd = outerShape
-            )
-            CardPosition.Single -> RoundedCornerShape(outerShape)
-        }
-    }
+    return remember { ParaShape(12.dp) }
 }
 
 @Composable
@@ -214,7 +174,8 @@ fun SettingsCard(
     BackgroundCard(
         modifier = modifier,
         shape = shape,
-        content = content
+        border = settingsCardBorder(),
+        content = { Column(Modifier.padding(horizontal = 12.dp), content = content) }
     )
 }
 
@@ -233,9 +194,10 @@ fun SettingsCard(
     BackgroundCard(
         modifier = modifier,
         shape = shape,
+        border = settingsCardBorder(),
         onClick = onClick,
         enabled = enabled,
-        content = content
+        content = { Column(Modifier.padding(horizontal = 12.dp), content = content) }
     )
 }
 
@@ -249,7 +211,7 @@ fun SettingsCard(
     summaryStyle: TextStyle = MaterialTheme.typography.labelSmall,
     outerShape: Dp = 28.dp,
     innerShape: Dp = 4.dp,
-    innerPadding: PaddingValues = PaddingValues(all = 16.dp),
+    innerPadding: PaddingValues = PaddingValues(start = 28.dp, end = 28.dp, top = 16.dp, bottom = 16.dp),
     onClick: () -> Unit,
     trailingIcon: (@Composable RowScope.() -> Unit)? = null,
     enabled: Boolean = true
@@ -259,6 +221,7 @@ fun SettingsCard(
     BackgroundCard(
         modifier = modifier,
         shape = shape,
+        border = settingsCardBorder(),
         onClick = onClick,
         enabled = enabled
     ) {
@@ -284,6 +247,10 @@ fun SettingsCard(
         }
     }
 }
+
+@Composable
+private fun settingsCardBorder() =
+    androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.40f))
 
 @Composable
 fun SettingsCardColumn(

@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.shoyoomc.cyberneticlauncher.setting.AllSettings
@@ -764,6 +765,13 @@ fun ZalithLauncherTheme(
             colorScheme = currentDisplayScheme,
             motionScheme = MotionScheme.expressive(),
             typography = AppTypography,
+            shapes = androidx.compose.material3.Shapes(
+                extraSmall = androidx.compose.foundation.shape.CutCornerShape(topStart = 6.dp, bottomEnd = 6.dp),
+                small = androidx.compose.foundation.shape.CutCornerShape(topStart = 8.dp, bottomEnd = 8.dp),
+                medium = androidx.compose.foundation.shape.CutCornerShape(topStart = 12.dp, bottomEnd = 12.dp),
+                large = androidx.compose.foundation.shape.CutCornerShape(topStart = 16.dp, bottomEnd = 16.dp),
+                extraLarge = androidx.compose.foundation.shape.CutCornerShape(topStart = 22.dp, bottomEnd = 22.dp),
+            ),
             content = content
         )
     }

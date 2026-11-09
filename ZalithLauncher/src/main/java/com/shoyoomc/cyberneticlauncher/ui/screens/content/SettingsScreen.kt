@@ -18,7 +18,20 @@
 
 package com.shoyoomc.cyberneticlauncher.ui.screens.content
 
-import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.shoyoomc.cyberneticlauncher.cyber.theme.ParaShape
+import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
+import com.shoyoomc.cyberneticlauncher.cyber.theme.tap
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -84,9 +97,9 @@ fun SettingsScreen(
         currentKey = backStackViewModel.mainScreen.currentKey
     ) { isVisible ->
 
-        Row(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             TabMenu(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.fillMaxWidth(),
                 isVisible = isVisible,
                 settingsScreenKey = backStackViewModel.settingsScreen.currentKey,
                 navigateTo = { settingKey ->
@@ -103,7 +116,7 @@ fun SettingsScreen(
                 openLicenseScreen = openLicenseScreen,
                 eventViewModel = eventViewModel,
                 submitError = submitError,
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier.fillMaxWidth().weight(1f)
             )
         }
     }
@@ -129,47 +142,46 @@ private fun TabMenu(
 ) {
     val ctx = rememberAnimatedContext(isVisible = isVisible)
 
-    val scrollState = rememberScrollState()
-    Column(
+    Row(
         modifier = modifier
-            .fadeEdge(scrollState)
-            .width(IntrinsicSize.Min)
-            .padding(start = 8.dp)
-            .animated(ctx, from = AnimatedDirection.Left)
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 8.dp, vertical = 6.dp)
+            .animated(ctx, from = AnimatedDirection.Top)
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
-        settingItems.forEach { item ->
-            if (item.division) {
-                HorizontalDivider(
-                    modifier = Modifier
-                        .padding(vertical = 12.dp)
-                        .fillMaxWidth(0.4f)
-                        .alpha(0.4f),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            NavigationRailItem(
-                selected = settingsScreenKey == item.key,
-                onClick = {
-                    navigateTo(item.key)
-                },
-                icon = {
+        settingItems.forEachIndexed { index, item ->
+            val selected = settingsScreenKey == item.key
+            val shape = ParaShape(14.dp)
+            Row(
+                modifier = Modifier
+                    .clip(shape)
+                    .background(
+                        if (selected) Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.AccentDeep))
+                        else Brush.horizontalGradient(listOf(ShoyoColors.Glass, ShoyoColors.Glass))
+                    )
+                    .border(1.dp, ShoyoColors.PanelBorder, shape)
+                    .tap { navigateTo(item.key) }
+                    .padding(start = 26.dp, end = 22.dp, top = 8.dp, bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CompositionLocalProvider(LocalContentColor provides if (selected) ShoyoColors.OnAccent else ShoyoColors.Accent) {
                     item.icon()
-                },
-                label = {
+                }
+                Spacer(Modifier.width(10.dp))
+                Column {
                     Text(
-                        modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE),
-                        text = stringResource(item.textRes),
-                        maxLines = 1,
-                        style = MaterialTheme.typography.labelMedium
+                        "%02d".format(index + 1),
+                        color = if (selected) ShoyoColors.OnAccent else ShoyoColors.TextSecondary,
+                        fontFamily = FontFamily.Monospace, fontSize = 10.sp, letterSpacing = 2.sp
+                    )
+                    Text(
+                        stringResource(item.textRes), maxLines = 1,
+                        color = if (selected) ShoyoColors.OnAccent else ShoyoColors.TextPrimary,
+                        fontWeight = FontWeight.Bold, fontSize = 14.sp
                     )
                 }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }

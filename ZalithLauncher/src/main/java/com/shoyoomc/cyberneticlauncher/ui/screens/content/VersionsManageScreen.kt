@@ -78,6 +78,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.path.GamePathManager
+import com.shoyoomc.cyberneticlauncher.cyber.screens.CyberVersionRow
+import com.shoyoomc.cyberneticlauncher.cyber.theme.GhostButton
+import com.shoyoomc.cyberneticlauncher.ui.androidText
+import com.shoyoomc.cyberneticlauncher.utils.string.getMessageOrToString
+import com.shoyoomc.cyberneticlauncher.cyber.screens.CyberVersionsPanel
 import com.shoyoomc.cyberneticlauncher.game.version.installed.Version
 import com.shoyoomc.cyberneticlauncher.game.version.installed.VersionComparator
 import com.shoyoomc.cyberneticlauncher.game.version.installed.VersionType
@@ -409,12 +414,13 @@ private fun LeftMenu(
             }
         }
 
-        ScalingActionButton(
-            modifier = Modifier
+        GhostButton(
+            stringResource(R.string.versions_manage_game_path_add_new), null,
+            Modifier
                 .padding(start = 12.dp)
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            onClick = {
+            {
                 (context as? MainActivity)?.let { activity ->
                     checkStoragePermissions(
                         activity = activity,
@@ -425,20 +431,16 @@ private fun LeftMenu(
                         }
                     )
                 }
-            },
-            enabled = canHandlePermission
-        ) {
-            MarqueeText(text = stringResource(R.string.versions_manage_game_path_add_new))
-        }
+            }
+        )
 
-        ScalingActionButton(
-            modifier = Modifier
+        GhostButton(
+            stringResource(R.string.versions_manage_cleanup), null,
+            Modifier
                 .padding(start = 12.dp, top = 8.dp, bottom = 12.dp)
                 .fillMaxWidth(),
-            onClick = onCleanupGameFiles
-        ) {
-            MarqueeText(text = stringResource(R.string.versions_manage_cleanup))
-        }
+            onCleanupGameFiles
+        )
     }
 }
 
@@ -518,165 +520,48 @@ private fun VersionsLayout(
                 shape = barShape
             }
 
-            Box(modifier = Modifier.fillMaxSize()) {
-                if (versions.isNotEmpty()) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection)
-                            .topBarWheelFallback(topAppBarState)
-                            .nonInteractiveScrollbar(
-                                state = listState.scrollIndicatorState!!,
-                                orientation = Orientation.Vertical,
-                            )
-                            .clipToBounds()
-                            .topFade {
-                                (headerHeightPx + headerTopPaddingPx + 80f) *
-                                        listScrolledFraction.value *
-                                        barShownFraction.value
-                            },
-                        contentPadding = PaddingValues(
-                            start = 12.dp,
-                            top = with(density) {
-                                (headerHeightPx + topAppBarState.heightOffset).coerceAtLeast(0f).toDp()
-                            },
-                            end = 12.dp,
-                            bottom = 12.dp
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        state = listState,
-                    ) {
-                        items(versions, key = { it.toString() }) { version ->
-                            VersionItemLayout(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .animateItem(),
-                                version = version,
-                                selected = version == currentVersion,
-                                submitError = submitError,
-                                onSelected = {
-                                    if (version == currentVersion) return@VersionItemLayout
-                                    if (!VersionsManager.saveVersion(version)) {
-                                        //不允许选择无效版本
-                                        versionsOperation = VersionsOperation.InvalidDelete(version)
-                                    }
-                                },
-                                onSettingsClick = {
-                                    navigateToVersions(version)
-                                },
-                                onRenameClick = { versionsOperation = VersionsOperation.Rename(version) },
-                                onCopyClick = { versionsOperation = VersionsOperation.Copy(version) },
-                                onExportClick = { navigateToExport(version) },
-                                onDeleteClick = { versionsOperation = VersionsOperation.Delete(version) },
-                                onPinned = onVersionPinned
-                            )
+            val context = LocalContext.current
+            CyberVersionsPanel(
+                modifier = Modifier.fillMaxSize().padding(12.dp),
+                versions = versions,
+                currentVersion = currentVersion,
+                categoryLabels = listOf(
+                    "Todas ($allVersionsCount)",
+                    "Vanilla ($vanillaVersionsCount)",
+                    "Com loader ($modloaderVersionsCount)"
+                ),
+                selectedCategory = versionCategory.ordinal,
+                onCategory = { onCategoryChange(VersionCategory.entries[it]) },
+                onRefresh = onRefresh,
+                onInstall = onInstall,
+                emptyText = stringResource(R.string.versions_manage_no_versions)
+            ) { version ->
+                CyberVersionRow(
+                    version = version,
+                    selected = version == currentVersion,
+                    onSelected = {
+                        if (!VersionsManager.saveVersion(version)) {
+                            versionsOperation = VersionsOperation.InvalidDelete(version)
                         }
-                    }
-                } else {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        ScalingLabel(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = stringResource(R.string.versions_manage_no_versions)
-                        )
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .zIndex(1f)
-                        .onSizeChanged {
-                            headerHeightPx = it.height
-                            topAppBarState.heightOffsetLimit = -it.height.toFloat()
-                        }
-                        .offset { IntOffset(x = 0, y = topAppBarState.heightOffset.roundToInt()) }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(IntrinsicSize.Min)
-                            .padding(all = 12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        val blur = AllSettings.backgroundBlur.state
-                        val cardColor = cardColor()
-
-                        Surface(
-                            modifier = Modifier
-                                .height(IntrinsicSize.Max)
-                                .then(barShadowModifier),
-                            color = cardColor,
-                            contentColor = onCardColor(),
-                            shape = MaterialTheme.shapes.large,
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .backgroundGlass(blur, cardColor)
-                                    .padding(all = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconTextButton(
-                                    onClick = onRefresh,
-                                    painter = painterResource(R.drawable.ic_refresh),
-                                    contentDescription = stringResource(R.string.generic_refresh),
-                                    text = stringResource(R.string.generic_refresh)
-                                )
-                                IconTextButton(
-                                    onClick = onInstall,
-                                    painter = painterResource(R.drawable.ic_download),
-                                    contentDescription = stringResource(R.string.versions_manage_install_new),
-                                    text = stringResource(R.string.versions_manage_install_new),
-                                )
-                            }
-                        }
-
-                        // 版本分类
-                        Surface(
-                            modifier = Modifier
-                                .weight(1f, fill = false)
-                                .height(IntrinsicSize.Max)
-                                .then(barShadowModifier),
-                            color = cardColor,
-                            contentColor = onCardColor(),
-                            shape = MaterialTheme.shapes.large,
-                        ) {
-                            val scrollState = rememberScrollState()
-                            Row(
-                                modifier = Modifier
-                                    .backgroundGlass(blur, cardColor)
-                                    .fadeEdge(
-                                        state = scrollState,
-                                        length = 32.dp,
-                                        direction = EdgeDirection.Horizontal
+                    },
+                    onPin = {
+                        runCatching { version.setPinnedAndSave(!version.pinnedState) }
+                            .onFailure { e ->
+                                submitError(
+                                    ErrorViewModel.ThrowableMessage(
+                                        title = androidText(R.string.versions_config_failed_to_save),
+                                        message = androidText(e.getMessageOrToString())
                                     )
-                                    .horizontalScroll(state = scrollState)
-                                    .padding(all = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                VersionCategoryItem(
-                                    value = VersionCategory.ALL,
-                                    versionsCount = allVersionsCount,
-                                    selected = versionCategory == VersionCategory.ALL,
-                                    onClick = { onCategoryChange(VersionCategory.ALL) }
-                                )
-                                VersionCategoryItem(
-                                    value = VersionCategory.VANILLA,
-                                    versionsCount = vanillaVersionsCount,
-                                    selected = versionCategory == VersionCategory.VANILLA,
-                                    onClick = { onCategoryChange(VersionCategory.VANILLA) }
-                                )
-                                VersionCategoryItem(
-                                    value = VersionCategory.MODLOADER,
-                                    versionsCount = modloaderVersionsCount,
-                                    selected = versionCategory == VersionCategory.MODLOADER,
-                                    onClick = { onCategoryChange(VersionCategory.MODLOADER) }
                                 )
                             }
-                        }
-                    }
-                }
+                            .onSuccess { onVersionPinned() }
+                    },
+                    onSettings = { navigateToVersions(version) },
+                    onRename = { versionsOperation = VersionsOperation.Rename(version) },
+                    onCopy = { versionsOperation = VersionsOperation.Copy(version) },
+                    onExport = { navigateToExport(version) },
+                    onDelete = { versionsOperation = VersionsOperation.Delete(version) }
+                )
             }
         }
     }

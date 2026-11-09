@@ -83,6 +83,45 @@ private val embermireLight = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight.embermire,
 )
 
+/** Industrial Cyber: preto com laranja. Esquema único do CYBERNETIC (todas as telas). */
+private val shoyoIndustrialDark = darkColorScheme(
+    primary = Color(0xFFFF7A1A),
+    onPrimary = Color(0xFF0A0500),
+    primaryContainer = Color(0xFF5A2600),
+    onPrimaryContainer = Color(0xFFFFDCC2),
+    secondary = Color(0xFFFFC21A),
+    onSecondary = Color(0xFF2A1D00),
+    secondaryContainer = Color(0xFF3A2A0A),
+    onSecondaryContainer = Color(0xFFFFE6A8),
+    tertiary = Color(0xFFC9A583),
+    onTertiary = Color(0xFF2A1A08),
+    tertiaryContainer = Color(0xFF3E2C1A),
+    onTertiaryContainer = Color(0xFFF2DCC2),
+    error = Color(0xFFFF5C4D),
+    onError = Color(0xFF2A0500),
+    errorContainer = Color(0xFF7A1A10),
+    onErrorContainer = Color(0xFFFFDAD6),
+    background = Color(0xFF0A0807),
+    onBackground = Color(0xFFF2E8DF),
+    surface = Color(0xFF0A0807),
+    onSurface = Color(0xFFF2E8DF),
+    surfaceVariant = Color(0xFF2A211A),
+    onSurfaceVariant = Color(0xFFD6C3B3),
+    outline = Color(0xFF9A7B5E),
+    outlineVariant = Color(0xFF4A3828),
+    scrim = Color(0xFF000000),
+    inverseSurface = Color(0xFFF2E8DF),
+    inverseOnSurface = Color(0xFF2A1F16),
+    inversePrimary = Color(0xFFB34A00),
+    surfaceDim = Color(0xFF0A0807),
+    surfaceBright = Color(0xFF2E241B),
+    surfaceContainerLowest = Color(0xFF060504),
+    surfaceContainerLow = Color(0xFF120E0B),
+    surfaceContainer = Color(0xFF1A1410),
+    surfaceContainerHigh = Color(0xFF251C15),
+    surfaceContainerHighest = Color(0xFF30251C),
+)
+
 /** Tema "Vermelho Shoyo": preto profundo com vermelho. Usado também no modo claro. */
 private val shoyoRedDark = darkColorScheme(
     primary = Color(0xFFFF4D5A),
@@ -654,7 +693,7 @@ fun ZalithLauncherTheme(
 
     val context = LocalContext.current
 
-    val targetColorScheme = remember(darkTheme, dynamicColor, colorTheme, customColor, customPaletteStyle) {
+    val legacyScheme = remember(darkTheme, dynamicColor, colorTheme, customColor, customPaletteStyle) {
         when {
             dynamicColor && colorTheme == ColorThemeType.DYNAMIC && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -693,6 +732,9 @@ fun ZalithLauncherTheme(
             }
         }
     }
+
+    @Suppress("UNUSED_VARIABLE") val unusedLegacy = legacyScheme
+    val targetColorScheme = shoyoIndustrialDark
 
     var currentDarkTheme by remember { mutableStateOf(darkTheme) }
     var currentDisplayScheme by remember { mutableStateOf(targetColorScheme) }

@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -56,14 +58,32 @@ class ParaShape(private val skew: Dp = 14.dp) : Shape {
     }
 }
 
-/** Segmentos de destaque nos cantos (topo-esquerda e base-direita) seguindo a inclinação. */
+/**
+ * Destaques industriais: faixa de perigo (listras laranja/preto) no canto superior-esquerdo,
+ * LED no canto inferior-direito e rebites nos outros dois cantos.
+ */
 fun Modifier.paraAccents(skew: Dp = 14.dp, color: Color? = null, len: Dp = 34.dp, stroke: Dp = 3.dp): Modifier =
     drawBehind {
         val c = color ?: ShoyoColors.Accent
         val s = skew.toPx().coerceAtMost(size.width / 3f)
-        val l = len.toPx(); val t = stroke.toPx()
-        drawLine(c, Offset(s, t / 2), Offset(s + l, t / 2), t)
-        drawLine(c, Offset(size.width - s - l, size.height - t / 2), Offset(size.width - s, size.height - t / 2), t)
+        val l = len.toPx(); val t = (stroke + 2.dp).toPx()
+        // faixa de perigo
+        val step = 7.dp.toPx()
+        var x = s
+        var on = true
+        while (x < s + l) {
+            val w = minOf(step, s + l - x)
+            drawRect(if (on) c else Color(0xFF0A0807), Offset(x, 0f), Size(w, t))
+            x += step; on = !on
+        }
+        // LED
+        val ls = 5.dp.toPx()
+        drawRect(c, Offset(size.width - s - 14.dp.toPx() - ls, size.height - t / 2 - ls / 2), Size(ls, ls))
+        drawRect(c.copy(alpha = 0.35f), Offset(size.width - s - 6.dp.toPx() - ls, size.height - t / 2 - ls / 2), Size(ls, ls))
+        // rebites
+        val r = 1.8.dp.toPx(); val rc = c.copy(alpha = 0.55f)
+        drawCircle(rc, r, Offset(size.width - 10.dp.toPx(), 7.dp.toPx()))
+        drawCircle(rc, r, Offset(10.dp.toPx(), size.height - 7.dp.toPx()))
     }
 
 /** Fundo com hachuras diagonais finas, bem sutis (textura tecnológica). */
@@ -76,13 +96,19 @@ fun Modifier.hatch(alpha: Float = 0.05f, gap: Dp = 14.dp): Modifier = drawBehind
     }
 }
 
-/** Texto de HUD em monoespaçado: "// VERSÃO ATIVA". */
+/** Texto de HUD em monoespaçado com LED pulsante: "// VERSÃO ATIVA". */
 @Composable
 fun HudLabel(text: String, modifier: Modifier = Modifier, color: Color = ShoyoColors.Accent) {
-    Text(
-        text.uppercase(), modifier = modifier, color = color,
-        fontFamily = FontFamily.Monospace, fontSize = 11.sp, letterSpacing = 2.sp
-    )
+    val t = rememberInfiniteTransition(label = "led")
+    val a by t.animateFloat(0.35f, 1f, infiniteRepeatable(tween(900, easing = LinearEasing), RepeatMode.Reverse), label = "a")
+    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(6.dp).background(color.copy(alpha = a)))
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text.uppercase(), color = color,
+            fontFamily = FontFamily.Monospace, fontSize = 11.sp, letterSpacing = 2.sp
+        )
+    }
 }
 
 /** Botão JOGAR gigante, com chevrons que correm. */

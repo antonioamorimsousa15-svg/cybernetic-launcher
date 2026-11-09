@@ -128,8 +128,18 @@ object ShoyoPalettes {
         glass = Color(0x990A2218), rowBg = Color(0xE6071A12)
     )
 
-    val all = listOf(Glacier, Crimson, Violet, Emerald)
-    fun byName(name: String): ShoyoPalette = all.firstOrNull { it.name == name } ?: Glacier
+    val Industrial = ShoyoPalette(
+        name = "Industrial",
+        accent = Color(0xFFFF7A1A), accentDeep = Color(0xFFE85D04), onAccent = Color(0xFF0A0500),
+        secondary = Color(0xFFFFC21A), secondaryDeep = Color(0xFFD99A00),
+        textSecondary = Color(0xFFC9A583),
+        bg = Color(0xFF0A0807), bgAlt = Color(0xFF1A1410),
+        panelTop = Color(0xE61A1410), panelBottom = Color(0xF20A0807),
+        glass = Color(0x991A1410), rowBg = Color(0xE6120E0B)
+    )
+
+    val all = listOf(Industrial, Crimson, Glacier, Violet, Emerald)
+    fun byName(name: String): ShoyoPalette = all.firstOrNull { it.name == name } ?: Industrial
 }
 
 // =====================================================================
@@ -137,7 +147,7 @@ object ShoyoPalettes {
 // =====================================================================
 object ShoyoUi {
     // Aparência
-    var paletteName by mutableStateOf("Vermelho Shoyo")
+    var paletteName by mutableStateOf("Industrial")
     var glowOn by mutableStateOf(true)
     var glowLevel by mutableFloatStateOf(6f)        // 1..10
     var glowIntensity by mutableFloatStateOf(80f)   // 5..100 (%)
@@ -187,7 +197,7 @@ object ShoyoUi {
 
     fun load(ctx: Context) {
         val p = ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE)
-        paletteName = p.getString("palette", paletteName) ?: paletteName
+        paletteName = p.getString("palette_v2", paletteName) ?: paletteName
         glowOn = p.getBoolean("glowOn", glowOn)
         glowLevel = p.getFloat("glowLevel", glowLevel)
         glowIntensity = p.getFloat("glowIntensity", glowIntensity)
@@ -230,7 +240,7 @@ object ShoyoUi {
 
     fun save(ctx: Context) {
         ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit()
-            .putString("palette", paletteName)
+            .putString("palette_v2", paletteName)
             .putBoolean("glowOn", glowOn)
             .putFloat("glowLevel", glowLevel)
             .putFloat("glowIntensity", glowIntensity)

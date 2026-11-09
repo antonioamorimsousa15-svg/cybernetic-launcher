@@ -33,6 +33,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -57,6 +59,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shoyoomc.cyberneticlauncher.R
+import com.shoyoomc.cyberneticlauncher.cyber.screens.CyberAccountItem
+import com.shoyoomc.cyberneticlauncher.cyber.screens.CyberWardrobeDialog
+import com.shoyoomc.cyberneticlauncher.cyber.theme.NeonButton
+import com.shoyoomc.cyberneticlauncher.cyber.theme.NeonPanel
+import com.shoyoomc.cyberneticlauncher.cyber.theme.SectionTitle
+import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
 import com.shoyoomc.cyberneticlauncher.context.COPY_LABEL_ACCOUNT_UUID
 import com.shoyoomc.cyberneticlauncher.game.account.Account
 import com.shoyoomc.cyberneticlauncher.game.account.AccountsManager
@@ -303,25 +311,23 @@ private fun ActionsLayout(
                     ?.inputStream()?.use { it.readBytes() }
             }
         }
-        PetModelView(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            skin = skinBytes,
-            cape = capeBytes,
-            arm = armModel,
-            yaw = Math.toRadians(35.0).toFloat()
-        )
-
-        //添加账号
-        ScalingActionButton(
-            modifier = Modifier
-                .fillMaxWidth(),
-            onClick = {
+        NeonPanel(Modifier.weight(1f).fillMaxWidth()) {
+            SectionTitle("Perfil")
+            PetModelView(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                skin = skinBytes,
+                cape = capeBytes,
+                arm = armModel,
+                yaw = Math.toRadians(35.0).toFloat()
+            )
+            NeonButton(
+                "Adicionar conta", Icons.Filled.Add,
+                Modifier.fillMaxWidth()
+            ) {
                 actions.onIntent(AccountManageIntent.UpdateLoginMenuOp(LoginMenuOperation.Login))
             }
-        ) {
-            MarqueeText(text = stringResource(R.string.account_add_new_account))
         }
     }
 }
@@ -682,32 +688,22 @@ private fun AccountsLayout(
         actions = actions
     )
 
-    BackgroundCard(
-        modifier = modifier.animated(ctx),
-        shape = MaterialTheme.shapes.extraLarge
-    ) {
+    NeonPanel(modifier = modifier.animated(ctx)) {
+        SectionTitle("Suas contas")
+        androidx.compose.foundation.layout.Spacer(Modifier.height(8.dp))
         if (accounts.isNotEmpty()) {
             val scrollState = rememberLazyListState()
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .nonInteractiveScrollbar(
-                        state = scrollState.scrollIndicatorState!!,
-                        orientation = Orientation.Vertical,
-                    )
-                    .clip(MaterialTheme.shapes.extraLarge),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(10.dp),
                 state = scrollState,
             ) {
                 items(accounts, key = { it.uniqueUUID }) { account ->
-                    AccountItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 6.dp),
+                    CyberAccountItem(
                         currentAccount = currentAccount,
                         account = account,
                         onSelected = { AccountsManager.setCurrentAccount(it) },
-                        openChangeSkinDialog = {
+                        onWardrobe = {
                             if (!account.isAuthServerAccount()) {
                                 actions.onIntent(
                                     AccountManageIntent.UpdateAccountSkinOp(
@@ -716,21 +712,13 @@ private fun AccountsLayout(
                                 )
                             }
                         },
-                        onRefreshClick = {
-                            actions.onIntent(
-                                AccountManageIntent.RefreshAccount(
-                                    account
-                                )
-                            )
-                        },
+                        onRefresh = { actions.onIntent(AccountManageIntent.RefreshAccount(account)) },
                         onCopyUUID = {
                             copyText(COPY_LABEL_ACCOUNT_UUID, account.profileId, context, true)
                         },
-                        onDeleteClick = {
+                        onDelete = {
                             actions.onIntent(
-                                AccountManageIntent.UpdateAccountOp(
-                                    AccountOperation.Delete(account)
-                                )
+                                AccountManageIntent.UpdateAccountOp(AccountOperation.Delete(account))
                             )
                         }
                     )
@@ -738,9 +726,10 @@ private fun AccountsLayout(
             }
         } else {
             Box(modifier = Modifier.fillMaxSize()) {
-                ScalingLabel(
+                Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = stringResource(R.string.account_no_account)
+                    text = stringResource(R.string.account_no_account),
+                    color = ShoyoColors.TextSecondary
                 )
             }
         }
@@ -761,7 +750,7 @@ private fun AccountSkinOperation(
         is AccountSkinOperation.None -> {}
         is AccountSkinOperation.ChangeSkin -> {
             val account = accountSkinOperation.account
-            ChangeSkinDialog(
+            CyberWardrobeDialog(
                 account = account,
                 availableCapes = accountCapes[account.uniqueUUID],
                 skinState = skinDialogState.pendingSkinData,

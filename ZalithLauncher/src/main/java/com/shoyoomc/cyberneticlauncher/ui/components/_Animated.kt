@@ -115,7 +115,7 @@ private fun rememberAnimatedContext(
 fun Modifier.animated(
     ctx: AnimatedContext,
     from: AnimatedDirection = AnimatedDirection.Auto,
-    distance: Dp = 40.dp,
+    distance: Dp = 24.dp,
     fade: Boolean = true
 ): Modifier = this.graphicsLayer {
     val progress = ctx.progress.value

@@ -78,6 +78,19 @@ import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.coroutine.TaskSystem
 import com.shoyoomc.cyberneticlauncher.game.version.installed.Version
 import com.shoyoomc.cyberneticlauncher.game.version.installed.VersionsManager
+import com.shoyoomc.cyberneticlauncher.game.account.AccountsManager
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.ui.platform.LocalContext
+import com.shoyoomc.cyberneticlauncher.BuildConfig
+import com.shoyoomc.cyberneticlauncher.ui.toAndroidString
+import com.shoyoomc.cyberneticlauncher.cyber.theme.GlassPill
+import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
+import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoTopBar
+import com.shoyoomc.cyberneticlauncher.game.account.isAuthServerAccount
+import com.shoyoomc.cyberneticlauncher.game.account.isMicrosoftAccount
+import com.shoyoomc.cyberneticlauncher.cyber.screens.CyberHomeScreen
 import com.shoyoomc.cyberneticlauncher.path.PathManager
 import com.shoyoomc.cyberneticlauncher.setting.AllSettings
 import com.shoyoomc.cyberneticlauncher.ui.AndroidStringText
@@ -178,45 +191,57 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            TopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp),
-                mainScreenKey = mainScreenKey,
-                inLauncherScreen = inLauncherScreen,
-                taskRunning = taskRunning,
-                isTasksExpanded = isTaskMenuExpanded,
-                contentColor = onBackgroundColor(),
-                onScreenBack = {
-                    screenBackStackModel.mainScreen.backStack.removeFirstOrNull()
+            val ctx = LocalContext.current
+            val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+            val parentTitle = mainScreenKey?.title
+            val childTitle = (mainScreenKey as? BackStackNavKey<*>)?.currentKey?.title
+            val breadcrumb = when {
+                parentTitle == null -> "Início"
+                childTitle != null -> parentTitle.toAndroidString(ctx) + " › " + childTitle.toAndroidString(ctx)
+                else -> parentTitle.toAndroidString(ctx)
+            }
+            val topAccount by AccountsManager.currentAccountFlow.collectAsStateWithLifecycle()
+
+            ShoyoTopBar(
+                appName = "CYBERNETIC",
+                version = "v" + BuildConfig.VERSION_NAME,
+                breadcrumb = breadcrumb,
+                userName = topAccount?.username ?: "Steve",
+                logo = painterResource(R.drawable.ic_launcher_fg_img),
+                backIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                filesIcon = Icons.Filled.Folder,
+                onBack = {
+                    if (inLauncherScreen) {
+                        sidebarOpen = !sidebarOpen
+                    } else {
+                        backDispatcher?.onBackPressed() ?: run {
+                            screenBackStackModel.mainScreen.backStack.removeFirstOrNull()
+                        }
+                    }
                 },
-                toMainScreen = toMainScreen,
-                toSettingsScreen = {
-                    screenBackStackModel.mainScreen.removeAndNavigateTo(
-                        removes = screenBackStackModel.clearBeforeNavKeys,
-                        screenKey = screenBackStackModel.settingsScreen
-                    )
-                },
-                toDownloadScreen = {
-                    screenBackStackModel.navigateToDownload()
-                },
-                toMultiplayerScreen = {
-                    screenBackStackModel.mainScreen.removeAndNavigateTo(
-                        removes = screenBackStackModel.clearBeforeNavKeys,
-                        screenKey = NormalNavKey.Multiplayer
-                    )
-                },
-                openFileManager = {
+                onFiles = {
                     eventViewModel.sendEvent(
                         EventViewModel.Event.OpenFileManager(
                             rootPath = PathManager.DIR_FILES_EXTERNAL.absolutePath
                         )
                     )
                 },
-                changeExpandedState = {
-                    changeTasksExpandedState()
+                onUser = {
+                    screenBackStackModel.mainScreen.removeAndNavigateTo(
+                        removes = screenBackStackModel.clearBeforeNavKeys,
+                        screenKey = NormalNavKey.AccountManager()
+                    )
                 },
                 onMenu = { sidebarOpen = !sidebarOpen },
+                extra = {
+                    GlassPill(onClick = { changeTasksExpandedState() }) {
+                        Text(
+                            if (taskRunning) "Tarefas •" else "Tarefas",
+                            color = ShoyoColors.TextPrimary,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
             )
 
             Row(
@@ -224,7 +249,13 @@ fun MainScreen(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-              if (sidebarOpen) {
+              androidx.compose.animation.AnimatedVisibility(
+                visible = sidebarOpen,
+                enter = androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(280)) +
+                    androidx.compose.animation.expandHorizontally(androidx.compose.animation.core.tween(320, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
+                exit = androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(180)) +
+                    androidx.compose.animation.shrinkHorizontally(androidx.compose.animation.core.tween(260, easing = androidx.compose.animation.core.FastOutSlowInEasing))
+              ) {
                 ShoyoSidebar(
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
                     inHome = inLauncherScreen,
@@ -588,30 +619,29 @@ private fun NavigationUI(
             popTransitionSpec = rememberTransitionSpec(),
             entryProvider = entryProvider {
                 entry<NormalNavKey.LauncherMain> {
-                    LauncherScreen(
-                        backStackViewModel = screenBackStackModel,
-                        navigateToVersions = navigateToVersions,
-                        onLaunchGame = { version ->
+                    // CYBERNETIC: tela Início própria, ligada ao núcleo (conta, versão e jogar)
+                    val account by AccountsManager.currentAccountFlow.collectAsStateWithLifecycle()
+                    val version by VersionsManager.currentVersion.collectAsStateWithLifecycle()
+                    CyberHomeScreen(
+                        accountName = account?.username ?: "Steve",
+                        isOfflineAccount = account?.let { !(it.isMicrosoftAccount() || it.isAuthServerAccount()) } ?: true,
+                        versionName = version?.takeIf { it.isValid() }?.getVersionName(),
+                        onPlay = {
                             eventViewModel.sendEvent(
-                                EventViewModel.Event.Launch.Game(version)
+                                EventViewModel.Event.Launch.Game(VersionsManager.currentVersion.value)
                             )
                         },
-                        onQuickPlayServer = { version, address ->
-                            val target = (version ?: VersionsManager.currentVersion.value)?.takeIf { it.isValid() }
-                            if (target != null) {
-                                eventViewModel.sendEvent(
-                                    EventViewModel.Event.Launch.PlayServer(target, address)
-                                )
-                            } else {
-                                eventViewModel.sendToast(androidText(R.string.game_launch_no_version))
-                                screenBackStackModel.mainScreen.navigateTo(NormalNavKey.VersionsManager)
-                            }
+                        onVersions = {
+                            screenBackStackModel.mainScreen.removeAndNavigateTo(
+                                removes = screenBackStackModel.clearBeforeNavKeys,
+                                screenKey = NormalNavKey.VersionsManager
+                            )
                         },
-                        onOpenLink = {
-                            eventViewModel.sendEvent(EventViewModel.Event.OpenLink(it))
-                        },
-                        startGuideOnce = { keys ->
-                            eventViewModel.sendStartGuideOnce(keys)
+                        onAccounts = {
+                            screenBackStackModel.mainScreen.removeAndNavigateTo(
+                                removes = screenBackStackModel.clearBeforeNavKeys,
+                                screenKey = NormalNavKey.AccountManager()
+                            )
                         }
                     )
                 }

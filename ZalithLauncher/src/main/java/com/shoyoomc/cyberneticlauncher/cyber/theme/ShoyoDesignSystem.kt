@@ -46,6 +46,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.composed
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -294,8 +295,8 @@ object ShoyoAccent {
 }
 
 private val ShoyoTypography = Typography(
-    titleMedium = TextStyle(fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold, fontSize = 18.sp),
-    bodyMedium = TextStyle(fontFamily = FontFamily.Serif, fontSize = 14.sp),
+    titleMedium = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold, fontSize = 17.sp),
+    bodyMedium = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 14.sp),
     labelSmall = TextStyle(fontFamily = FontFamily.Monospace, fontSize = 10.sp, letterSpacing = 1.5.sp)
 )
 
@@ -317,8 +318,8 @@ fun ShoyoTheme(content: @Composable () -> Unit) {
 // =====================================================================
 //  FORMAS + BRILHO
 // =====================================================================
-val PanelShape = CutCornerShape(topStart = 0.dp, topEnd = 20.dp, bottomEnd = 20.dp, bottomStart = 0.dp)
-val PillShape = RoundedCornerShape(50)
+val PanelShape: Shape = ParaShape(18.dp)
+val PillShape: Shape = ParaShape(10.dp)
 
 /** Clique sem ripple, com um leve "afundar" suave ao tocar (spring amortecida). */
 fun Modifier.tap(onClick: () -> Unit): Modifier = composed {
@@ -345,44 +346,46 @@ fun Modifier.neonGlow(shape: Shape, color: Color = ShoyoColors.Accent): Modifier
 //  COMPONENTES BASE
 // =====================================================================
 
-/** Painel com canto cortado e borda neon (cards, filtros, listas). */
+/** Painel PARALELOGRAMO com borda neon e segmentos de destaque nos cantos. */
 @Composable
 fun NeonPanel(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Column(
         modifier = modifier
             .clip(PanelShape)
             .background(Brush.verticalGradient(listOf(ShoyoColors.PanelTop, ShoyoColors.PanelBottom)))
+            .hatch()
             .border(1.dp, ShoyoColors.PanelBorder, PanelShape)
-            .padding(16.dp),
+            .paraAccents(18.dp)
+            .padding(start = 30.dp, end = 30.dp, top = 18.dp, bottom = 18.dp),
         content = content
     )
 }
 
-/** Item do menu lateral: pílula, ativa em gradiente com brilho. */
+/** Item do menu lateral: paralelogramo numerado, escalonado (indent). */
 @Composable
-fun SideNavItem(icon: ImageVector, label: String, selected: Boolean, onClick: () -> Unit) {
+fun SideNavItem(icon: ImageVector, label: String, selected: Boolean, onClick: () -> Unit, number: Int = 0, indent: Dp = 0.dp) {
+    val shape = ParaShape(16.dp)
     val bg = if (selected) Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.AccentDeep))
     else Brush.horizontalGradient(listOf(ShoyoColors.Glass, ShoyoColors.Glass))
     Row(
         modifier = Modifier
+            .padding(start = indent)
             .fillMaxWidth()
-            .then(if (selected) Modifier.neonGlow(PillShape) else Modifier)
-            .clip(PillShape)
+            .then(if (selected) Modifier.neonGlow(shape) else Modifier)
+            .clip(shape)
             .background(bg)
-            .border(1.dp, ShoyoColors.PanelBorder, PillShape)
+            .border(1.dp, ShoyoColors.PanelBorder, shape)
             .tap(onClick)
-            .padding(horizontal = 10.dp, vertical = 8.dp),
+            .padding(start = 30.dp, end = 20.dp, top = 13.dp, bottom = 13.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            Modifier.size(34.dp).clip(CircleShape)
-                .background(if (selected) ShoyoColors.OnAccent else ShoyoColors.IconChip),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(icon, null, tint = if (selected) ShoyoColors.Accent else ShoyoColors.TextPrimary, modifier = Modifier.size(18.dp))
-        }
-        Spacer(Modifier.width(10.dp))
-        Text(label, color = if (selected) ShoyoColors.OnAccent else ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleMedium)
+        Text(
+            "%02d".format(number), color = if (selected) ShoyoColors.OnAccent else ShoyoColors.Accent,
+            fontFamily = FontFamily.Monospace, fontSize = 11.sp, fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(label, color = if (selected) ShoyoColors.OnAccent else ShoyoColors.TextPrimary,
+            style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -421,14 +424,14 @@ fun NeonButton(text: String, icon: ImageVector? = null, modifier: Modifier = Mod
             .clip(PillShape)
             .background(Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.AccentDeep)))
             .tap(onClick)
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .padding(horizontal = 28.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (icon != null) {
             Icon(icon, null, tint = ShoyoColors.OnAccent); Spacer(Modifier.width(8.dp))
         }
-        Text(text, color = ShoyoColors.OnAccent, style = MaterialTheme.typography.titleMedium)
+        Text(text.uppercase(), color = ShoyoColors.OnAccent, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Black, letterSpacing = 2.sp)
     }
 }
 
@@ -441,14 +444,14 @@ fun GhostButton(text: String, icon: ImageVector? = null, modifier: Modifier = Mo
             .background(ShoyoColors.Glass)
             .border(1.dp, ShoyoColors.PanelBorder, PillShape)
             .tap(onClick)
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .padding(horizontal = 28.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (icon != null) {
             Icon(icon, null, tint = ShoyoColors.Accent); Spacer(Modifier.width(8.dp))
         }
-        Text(text, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleMedium)
+        Text(text.uppercase(), color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
     }
 }
 
@@ -458,7 +461,7 @@ fun TagChip(text: String) {
     Text(
         text, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.bodyMedium,
         modifier = Modifier.clip(PillShape).border(1.dp, ShoyoColors.PanelBorder, PillShape)
-            .padding(horizontal = 12.dp, vertical = 4.dp)
+            .padding(horizontal = 18.dp, vertical = 4.dp)
     )
 }
 
@@ -475,7 +478,7 @@ fun SelectChip(text: String, selected: Boolean, onClick: () -> Unit) {
             .background(if (selected) ShoyoColors.Accent else ShoyoColors.Glass)
             .border(1.dp, ShoyoColors.PanelBorder, PillShape)
             .tap(onClick)
-            .padding(horizontal = 18.dp, vertical = 10.dp)
+            .padding(horizontal = 26.dp, vertical = 10.dp)
     )
 }
 

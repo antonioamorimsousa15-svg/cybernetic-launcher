@@ -85,20 +85,21 @@ fun SystemDialog(
     body: @Composable ColumnScope.() -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-        val shape = CutCornerShape(topStart = 24.dp, bottomEnd = 24.dp)
+        val shape = ParaShape(26.dp)
         Column(
             Modifier
                 .widthIn(max = maxWidth).fillMaxWidth(0.9f)
                 .clip(shape)
                 .background(Brush.verticalGradient(listOf(ShoyoColors.BgAlt, ShoyoColors.Bg)))
                 .border(1.5.dp, Brush.linearGradient(listOf(ShoyoColors.Secondary, ShoyoColors.AccentDeep)), shape)
-                .cornerBrackets(ShoyoColors.Secondary)
-                .padding(20.dp)
+                .hatch()
+                .paraAccents(26.dp, ShoyoColors.Secondary, len = 48.dp, stroke = 4.dp)
+                .padding(start = 42.dp, end = 42.dp, top = 22.dp, bottom = 22.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
-                    Modifier.size(48.dp).clip(CutCornerShape(10.dp))
-                        .border(1.dp, ShoyoColors.PanelBorder, CutCornerShape(10.dp)),
+                    Modifier.size(48.dp).clip(ParaShape(8.dp))
+                        .border(1.dp, ShoyoColors.PanelBorder, ParaShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) { Icon(icon, null, tint = ShoyoColors.Secondary) }
                 Spacer(Modifier.width(12.dp))
@@ -233,9 +234,9 @@ fun StatusBadge(text: String, kind: BadgeKind) {
         BadgeKind.Muted -> ShoyoColors.TextSecondary
     }
     Text(
-        text.uppercase(), color = c, style = MaterialTheme.typography.labelSmall, fontSize = 12.sp,
-        modifier = Modifier.clip(RoundedCornerShape(10.dp)).border(1.dp, c.copy(alpha = 0.7f), RoundedCornerShape(10.dp))
-            .padding(horizontal = 10.dp, vertical = 6.dp)
+        text.uppercase(), color = c, style = MaterialTheme.typography.labelSmall, fontSize = 11.sp, fontWeight = FontWeight.Bold,
+        modifier = Modifier.clip(ParaShape(6.dp)).background(c.copy(alpha = 0.12f)).border(1.dp, c.copy(alpha = 0.7f), ParaShape(6.dp))
+            .padding(horizontal = 14.dp, vertical = 5.dp)
     )
 }
 
@@ -248,7 +249,7 @@ fun DiamondRow(
     trailing: @Composable RowScope.() -> Unit = {},
     content: @Composable RowScope.() -> Unit
 ) {
-    val shape = CutCornerShape(topStart = 14.dp, bottomEnd = 14.dp)
+    val shape = ParaShape(12.dp)
     val border = if (blocked) ShoyoAccent.Danger.copy(alpha = 0.7f) else ShoyoColors.PanelBorder
     Row(
         modifier
@@ -256,7 +257,7 @@ fun DiamondRow(
             .background(ShoyoColors.RowBg)
             .border(1.dp, border, shape)
             .then(if (onClick != null) Modifier.tap(onClick) else Modifier)
-            .padding(horizontal = 14.dp, vertical = 12.dp),
+            .padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(Modifier.size(8.dp).rotate(45f).background(if (blocked) ShoyoAccent.Danger else ShoyoColors.Accent))
@@ -344,22 +345,18 @@ fun RadioOptionRow(label: String, selected: Boolean, onClick: () -> Unit) {
 // ---------- Painel SCANNER // FILTROS (colchetes na lateral esquerda) ----------
 @Composable
 fun ScannerPanel(title: String, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    val shape = CutCornerShape(topEnd = 28.dp, bottomEnd = 0.dp)
+    val shape = ParaShape(20.dp)
     Column(
         modifier
             .clip(shape)
             .background(ShoyoColors.PanelBottom)
-            .drawBehind {
-                val l = 28.dp.toPx(); val s = 3.dp.toPx()
-                drawLine(ShoyoColors.Accent, Offset(0f, s / 2), Offset(l, s / 2), s)
-                drawLine(ShoyoColors.Accent, Offset(s / 2, 0f), Offset(s / 2, l), s)
-                drawLine(ShoyoColors.Accent, Offset(0f, size.height - s / 2), Offset(l, size.height - s / 2), s)
-                drawLine(ShoyoColors.Accent, Offset(s / 2, size.height - l), Offset(s / 2, size.height), s)
-            }
-            .padding(18.dp),
+            .hatch()
+            .border(1.dp, ShoyoColors.PanelBorder, shape)
+            .paraAccents(20.dp, len = 56.dp, stroke = 4.dp)
+            .padding(start = 36.dp, end = 36.dp, top = 18.dp, bottom = 18.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(title, color = ShoyoColors.Accent, style = MaterialTheme.typography.labelSmall, fontSize = 13.sp)
+        HudLabel("// $title")
         content()
     }
 }
@@ -372,7 +369,7 @@ fun GlassPill(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, cont
             .background(ShoyoColors.Glass)
             .border(1.dp, ShoyoColors.PanelBorder, PillShape)
             .then(if (onClick != null) Modifier.tap(onClick) else Modifier)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
+            .padding(start = 22.dp, end = 22.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically, content = content
     )
 }
@@ -397,16 +394,17 @@ fun ShoyoTopBar(
             }
         }
         GlassPill(onClick = onBack) {
-            Box(Modifier.size(34.dp).clip(CircleShape).background(ShoyoColors.Accent), contentAlignment = Alignment.Center) {
+            Box(Modifier.size(34.dp).clip(ParaShape(7.dp)).background(ShoyoColors.Accent), contentAlignment = Alignment.Center) {
                 Icon(backIcon, null, tint = ShoyoColors.OnAccent)
             }
             Spacer(Modifier.width(10.dp))
+            HudLabel("SYS//", color = ShoyoColors.Accent); Spacer(Modifier.width(8.dp))
             Text(breadcrumb, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleMedium)
         }
         Spacer(Modifier.weight(1f))
         extra()
         GlassPill(onClick = onFiles) {
-            Box(Modifier.size(34.dp).clip(CircleShape).background(ShoyoColors.Accent), contentAlignment = Alignment.Center) {
+            Box(Modifier.size(34.dp).clip(ParaShape(7.dp)).background(ShoyoColors.Accent), contentAlignment = Alignment.Center) {
                 Icon(filesIcon, null, tint = ShoyoColors.OnAccent)
             }
             Spacer(Modifier.width(10.dp))
@@ -414,7 +412,7 @@ fun ShoyoTopBar(
         }
         GlassPill(onClick = onUser) {
             Box(
-                Modifier.size(34.dp).clip(RoundedCornerShape(8.dp)).background(ShoyoColors.IconChip),
+                Modifier.size(34.dp).clip(ParaShape(7.dp)).background(ShoyoColors.IconChip),
                 contentAlignment = Alignment.Center
             ) {
                 Text(userName.take(1).uppercase(), color = ShoyoColors.Accent, fontWeight = FontWeight.Bold)

@@ -2,6 +2,16 @@ package com.shoyoomc.cyberneticlauncher.cyber.theme
 
 import android.content.Context
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -469,18 +479,45 @@ fun SelectChip(text: String, selected: Boolean, onClick: () -> Unit) {
     )
 }
 
-/** Slider com thumb hexagonal. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** Slider próprio (sem depender da API do Material): trilho neon + thumb hexagonal. */
 @Composable
 fun NeonSlider(value: Float, onValueChange: (Float) -> Unit, range: ClosedFloatingPointRange<Float>, modifier: Modifier = Modifier) {
-    Slider(
-        value = value, onValueChange = onValueChange, valueRange = range, modifier = modifier,
-        colors = SliderDefaults.colors(
-            activeTrackColor = ShoyoColors.Accent,
-            inactiveTrackColor = ShoyoColors.Accent.copy(alpha = 0.25f)
-        ),
-        thumb = { HexThumb() }
-    )
+    val span = (range.endInclusive - range.start).coerceAtLeast(0.000001f)
+    val frac = ((value - range.start) / span).coerceIn(0f, 1f)
+    val accent = ShoyoColors.Accent
+    val thumbPx = with(LocalDensity.current) { 30.dp.toPx() }
+    var widthPx by remember { mutableFloatStateOf(1f) }
+
+    Box(
+        modifier
+            .height(40.dp)
+            .onSizeChanged { widthPx = it.width.toFloat().coerceAtLeast(1f) }
+            .pointerInput(range) {
+                detectTapGestures { o ->
+                    onValueChange(range.start + (o.x / size.width.toFloat()).coerceIn(0f, 1f) * span)
+                }
+            }
+            .pointerInput(range) {
+                detectHorizontalDragGestures { change, _ ->
+                    change.consume()
+                    onValueChange(range.start + (change.position.x / size.width.toFloat()).coerceIn(0f, 1f) * span)
+                }
+            },
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Canvas(Modifier.fillMaxWidth().height(10.dp)) {
+            val r = CornerRadius(size.height / 2f)
+            drawRoundRect(accent.copy(alpha = 0.25f), size = size, cornerRadius = r)
+            drawRoundRect(accent, size = Size(size.width * frac, size.height), cornerRadius = r)
+        }
+        Box(
+            Modifier.offset {
+                IntOffset(
+                    (frac * widthPx - thumbPx / 2f).coerceIn(0f, (widthPx - thumbPx).coerceAtLeast(0f)).toInt(), 0
+                )
+            }
+        ) { HexThumb() }
+    }
 }
 
 @Composable

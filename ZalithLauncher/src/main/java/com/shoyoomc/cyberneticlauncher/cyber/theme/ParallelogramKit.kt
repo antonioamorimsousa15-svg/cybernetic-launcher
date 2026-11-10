@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -172,6 +173,49 @@ fun HudStat(label: String, value: String, modifier: Modifier = Modifier) {
         androidx.compose.foundation.layout.Column {
             Text(label.uppercase(), color = ShoyoColors.TextSecondary, fontFamily = FontFamily.Monospace, fontSize = 10.sp, letterSpacing = 2.sp)
             Text(value, color = ShoyoColors.TextPrimary, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        }
+    }
+}
+
+/** Reflexo de vidro: faixa de luz suave no topo do painel (glassmorphism). */
+fun Modifier.glassSheen(): Modifier = drawBehind {
+    drawRect(
+        Brush.verticalGradient(
+            listOf(Color.White.copy(alpha = 0.10f), Color.Transparent),
+            endY = size.height * 0.45f
+        )
+    )
+}
+
+/**
+ * Fundo "aurora": brilhos que derivam devagar (cor do tema) + estrelas.
+ * Não pinta fundo opaco, então funciona sobre papel de parede.
+ */
+fun Modifier.auroraBackground(): Modifier = composed {
+    val t = rememberInfiniteTransition(label = "aurora")
+    val drift by t.animateFloat(0f, 1f, infiniteRepeatable(tween(14000, easing = LinearEasing), RepeatMode.Reverse), label = "d")
+    val a = ShoyoColors.Accent; val b = ShoyoColors.AccentDeep; val c = ShoyoColors.Secondary
+    drawBehind {
+        val w = size.width; val h = size.height
+        drawRect(Brush.verticalGradient(listOf(ShoyoColors.Bg, ShoyoColors.BgAlt)))
+        drawCircle(
+            Brush.radialGradient(listOf(a.copy(alpha = 0.30f), Color.Transparent), Offset(w * (0.25f + 0.35f * drift), h * 0.12f), w * 0.55f),
+            w * 0.55f, Offset(w * (0.25f + 0.35f * drift), h * 0.12f)
+        )
+        drawCircle(
+            Brush.radialGradient(listOf(b.copy(alpha = 0.22f), Color.Transparent), Offset(w * (0.8f - 0.3f * drift), h * 0.25f), w * 0.45f),
+            w * 0.45f, Offset(w * (0.8f - 0.3f * drift), h * 0.25f)
+        )
+        drawCircle(
+            Brush.radialGradient(listOf(c.copy(alpha = 0.08f), Color.Transparent), Offset(w * 0.1f, h * 0.95f), w * 0.4f),
+            w * 0.4f, Offset(w * 0.1f, h * 0.95f)
+        )
+        // estrelas fixas (posições pseudo-aleatórias determinísticas)
+        for (i in 0 until 70) {
+            val x = ((i * 7919) % 1000) / 1000f * w
+            val y = ((i * 104729) % 1000) / 1000f * h
+            val r = (0.6f + (i % 3) * 0.5f) * density
+            drawCircle(Color.White.copy(alpha = 0.12f + (i % 5) * 0.05f), r, Offset(x, y))
         }
     }
 }

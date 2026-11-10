@@ -69,6 +69,7 @@ import com.shoyoomc.cyberneticlauncher.ui.screens.NormalNavKey
 import com.shoyoomc.cyberneticlauncher.ui.screens.TitledNavKey
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.elements.CategoryIcon
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.elements.CategoryItem
+import com.shoyoomc.cyberneticlauncher.ui.screens.content.elements.CyberTabRow
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.AboutInfoScreen
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.ControlManageScreen
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.ControlSettingsScreen
@@ -141,49 +142,12 @@ private fun TabMenu(
     navigateTo: (TitledNavKey) -> Unit
 ) {
     val ctx = rememberAnimatedContext(isVisible = isVisible)
-
-    Row(
-        modifier = modifier
-            .padding(horizontal = 8.dp, vertical = 6.dp)
-            .animated(ctx, from = AnimatedDirection.Top)
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        settingItems.forEachIndexed { index, item ->
-            val selected = settingsScreenKey == item.key
-            val shape = ParaShape(14.dp)
-            Row(
-                modifier = Modifier
-                    .clip(shape)
-                    .background(
-                        if (selected) Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.AccentDeep))
-                        else Brush.horizontalGradient(listOf(ShoyoColors.Glass, ShoyoColors.Glass))
-                    )
-                    .border(1.dp, ShoyoColors.PanelBorder, shape)
-                    .tap { navigateTo(item.key) }
-                    .padding(start = 26.dp, end = 22.dp, top = 8.dp, bottom = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CompositionLocalProvider(LocalContentColor provides if (selected) ShoyoColors.OnAccent else ShoyoColors.Accent) {
-                    item.icon()
-                }
-                Spacer(Modifier.width(10.dp))
-                Column {
-                    Text(
-                        "%02d".format(index + 1),
-                        color = if (selected) ShoyoColors.OnAccent else ShoyoColors.TextSecondary,
-                        fontFamily = FontFamily.Monospace, fontSize = 10.sp, letterSpacing = 2.sp
-                    )
-                    Text(
-                        stringResource(item.textRes), maxLines = 1,
-                        color = if (selected) ShoyoColors.OnAccent else ShoyoColors.TextPrimary,
-                        fontWeight = FontWeight.Bold, fontSize = 14.sp
-                    )
-                }
-            }
-        }
-    }
+    CyberTabRow(
+        items = settingItems,
+        isSelected = { settingsScreenKey == it },
+        onSelect = navigateTo,
+        modifier = modifier.animated(ctx, from = AnimatedDirection.Top)
+    )
 }
 
 @Composable

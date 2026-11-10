@@ -93,6 +93,7 @@ fun SystemDialog(
                 .background(Brush.verticalGradient(listOf(ShoyoColors.BgAlt, ShoyoColors.Bg)))
                 .border(1.5.dp, Brush.linearGradient(listOf(ShoyoColors.Secondary, ShoyoColors.AccentDeep)), shape)
                 .hatch()
+                .glassSheen()
                 .paraAccents(26.dp, ShoyoColors.Secondary, len = 48.dp, stroke = 4.dp)
                 .padding(start = 42.dp, end = 42.dp, top = 22.dp, bottom = 22.dp)
         ) {
@@ -351,6 +352,7 @@ fun ScannerPanel(title: String, modifier: Modifier = Modifier, content: @Composa
             .clip(shape)
             .background(ShoyoColors.PanelBottom)
             .hatch()
+            .glassSheen()
             .border(1.dp, ShoyoColors.PanelBorder, shape)
             .paraAccents(20.dp, len = 56.dp, stroke = 4.dp)
             .padding(start = 36.dp, end = 36.dp, top = 18.dp, bottom = 18.dp),

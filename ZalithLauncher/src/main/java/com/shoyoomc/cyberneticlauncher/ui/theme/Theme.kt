@@ -84,6 +84,38 @@ private val embermireLight = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight.embermire,
 )
 
+/** Esquema Material derivado da paleta ativa (Cryogenic = azul/ciano, translúcido). */
+private fun shoyoSchemeFor(p: com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoPalette): androidx.compose.material3.ColorScheme {
+    if (p.name == "Industrial") return shoyoIndustrialDark
+    val onSurface = Color(0xFFEAF4FF)
+    fun mix(a: Color, b: Color, f: Float) = androidx.compose.ui.graphics.lerp(a, b, f)
+    return darkColorScheme(
+        primary = p.accent, onPrimary = p.onAccent,
+        primaryContainer = mix(p.bg, p.accentDeep, 0.35f), onPrimaryContainer = mix(Color.White, p.accent, 0.3f),
+        secondary = p.secondary, onSecondary = p.onAccent,
+        secondaryContainer = mix(p.bg, p.secondaryDeep, 0.30f), onSecondaryContainer = mix(Color.White, p.secondary, 0.3f),
+        tertiary = p.textSecondary, onTertiary = p.bg,
+        tertiaryContainer = mix(p.bg, p.textSecondary, 0.25f), onTertiaryContainer = onSurface,
+        error = Color(0xFFFF6B7A), onError = Color(0xFF2A0509),
+        errorContainer = Color(0xFF6A1A26), onErrorContainer = Color(0xFFFFDAD9),
+        background = p.bg, onBackground = onSurface,
+        surface = p.bg, onSurface = onSurface,
+        surfaceVariant = mix(p.bg, p.accent, 0.14f), onSurfaceVariant = p.textSecondary,
+        outline = mix(p.bg, p.accent, 0.55f), outlineVariant = mix(p.bg, p.accent, 0.25f),
+        scrim = Color.Black,
+        inverseSurface = onSurface, inverseOnSurface = p.bg, inversePrimary = p.accentDeep,
+        surfaceDim = p.bg, surfaceBright = mix(p.bg, p.accent, 0.20f),
+        surfaceContainerLowest = mix(p.bg, Color.Black, 0.4f),
+        surfaceContainerLow = mix(p.bg, p.bgAlt, 0.6f),
+        surfaceContainer = p.bgAlt,
+        surfaceContainerHigh = mix(p.bgAlt, p.accent, 0.10f),
+        surfaceContainerHighest = mix(p.bgAlt, p.accent, 0.18f),
+    )
+}
+
+/** Escala global da interface (1.0 = padrão do Android). Menor = mais compacto. */
+const val CYBER_UI_SCALE = 0.82f
+
 /** Industrial Cyber: preto com laranja. Esquema único do CYBERNETIC (todas as telas). */
 private val shoyoIndustrialDark = darkColorScheme(
     primary = Color(0xFFFF7A1A),
@@ -735,7 +767,7 @@ fun ZalithLauncherTheme(
     }
 
     @Suppress("UNUSED_VARIABLE") val unusedLegacy = legacyScheme
-    val targetColorScheme = shoyoIndustrialDark
+    val targetColorScheme = shoyoSchemeFor(com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoUi.palette)
 
     var currentDarkTheme by remember { mutableStateOf(darkTheme) }
     var currentDisplayScheme by remember { mutableStateOf(targetColorScheme) }
@@ -757,9 +789,15 @@ fun ZalithLauncherTheme(
         }
     }
 
+    // CYBERNETIC: interface compacta (como nas referências) — escala global da UI
+    val baseDensity = androidx.compose.ui.platform.LocalDensity.current
+    val compactDensity = remember(baseDensity) {
+        androidx.compose.ui.unit.Density(baseDensity.density * CYBER_UI_SCALE, baseDensity.fontScale)
+    }
     CompositionLocalProvider(
         LocalBackgroundViewModel provides backgroundViewModel,
-        LocalFestivals provides festivals
+        LocalFestivals provides festivals,
+        androidx.compose.ui.platform.LocalDensity provides compactDensity
     ) {
         MaterialExpressiveTheme(
             colorScheme = currentDisplayScheme,

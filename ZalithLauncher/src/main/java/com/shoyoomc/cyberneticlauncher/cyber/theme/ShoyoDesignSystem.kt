@@ -128,6 +128,16 @@ object ShoyoPalettes {
         glass = Color(0x990A2218), rowBg = Color(0xE6071A12)
     )
 
+    val Cryogenic = ShoyoPalette(
+        name = "Cryogenic",
+        accent = Color(0xFF55CFFF), accentDeep = Color(0xFF2EC4B6), onAccent = Color(0xFF03111C),
+        secondary = Color(0xFFFFA45C), secondaryDeep = Color(0xFFE07A2E),
+        textSecondary = Color(0xFF9DBBD6),
+        bg = Color(0xFF06122A), bgAlt = Color(0xFF0C2140),
+        panelTop = Color(0xB3123058), panelBottom = Color(0xCC081A38),
+        glass = Color(0x66184070), rowBg = Color(0x99102A4E)
+    )
+
     val Industrial = ShoyoPalette(
         name = "Industrial",
         accent = Color(0xFFFF7A1A), accentDeep = Color(0xFFE85D04), onAccent = Color(0xFF0A0500),
@@ -138,8 +148,8 @@ object ShoyoPalettes {
         glass = Color(0x991A1410), rowBg = Color(0xE6120E0B)
     )
 
-    val all = listOf(Industrial, Crimson, Glacier, Violet, Emerald)
-    fun byName(name: String): ShoyoPalette = all.firstOrNull { it.name == name } ?: Industrial
+    val all = listOf(Cryogenic, Industrial, Crimson, Glacier, Violet, Emerald)
+    fun byName(name: String): ShoyoPalette = all.firstOrNull { it.name == name } ?: Cryogenic
 }
 
 // =====================================================================
@@ -147,7 +157,7 @@ object ShoyoPalettes {
 // =====================================================================
 object ShoyoUi {
     // Aparência
-    var paletteName by mutableStateOf("Industrial")
+    var paletteName by mutableStateOf("Cryogenic")
     var glowOn by mutableStateOf(true)
     var glowLevel by mutableFloatStateOf(6f)        // 1..10
     var glowIntensity by mutableFloatStateOf(80f)   // 5..100 (%)
@@ -197,7 +207,7 @@ object ShoyoUi {
 
     fun load(ctx: Context) {
         val p = ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE)
-        paletteName = p.getString("palette_v2", paletteName) ?: paletteName
+        paletteName = p.getString("palette_v3", paletteName) ?: paletteName
         glowOn = p.getBoolean("glowOn", glowOn)
         glowLevel = p.getFloat("glowLevel", glowLevel)
         glowIntensity = p.getFloat("glowIntensity", glowIntensity)
@@ -240,7 +250,7 @@ object ShoyoUi {
 
     fun save(ctx: Context) {
         ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit()
-            .putString("palette_v2", paletteName)
+            .putString("palette_v3", paletteName)
             .putBoolean("glowOn", glowOn)
             .putFloat("glowLevel", glowLevel)
             .putFloat("glowIntensity", glowIntensity)
@@ -364,6 +374,7 @@ fun NeonPanel(modifier: Modifier = Modifier, content: @Composable ColumnScope.()
             .clip(PanelShape)
             .background(Brush.verticalGradient(listOf(ShoyoColors.PanelTop, ShoyoColors.PanelBottom)))
             .hatch()
+            .glassSheen()
             .border(1.dp, ShoyoColors.PanelBorder, PanelShape)
             .paraAccents(18.dp)
             .padding(start = 30.dp, end = 30.dp, top = 18.dp, bottom = 18.dp),

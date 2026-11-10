@@ -20,6 +20,7 @@ package com.shoyoomc.cyberneticlauncher.ui.screens.main
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
+import com.shoyoomc.cyberneticlauncher.cyber.theme.auroraBackground
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -190,6 +191,7 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .auroraBackground()
         ) {
             val ctx = LocalContext.current
             val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
@@ -212,7 +214,7 @@ fun MainScreen(
                 filesIcon = Icons.Filled.Folder,
                 onBack = {
                     if (inLauncherScreen) {
-                        sidebarOpen = !sidebarOpen
+                        // menu lateral fixo: sem esconder/mostrar
                     } else {
                         backDispatcher?.onBackPressed() ?: run {
                             screenBackStackModel.mainScreen.backStack.removeFirstOrNull()
@@ -232,7 +234,7 @@ fun MainScreen(
                         screenKey = NormalNavKey.AccountManager()
                     )
                 },
-                onMenu = { sidebarOpen = !sidebarOpen },
+                onMenu = { },
                 extra = {
                     GlassPill(onClick = { changeTasksExpandedState() }) {
                         Text(

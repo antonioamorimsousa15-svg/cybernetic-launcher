@@ -40,6 +40,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -87,7 +88,9 @@ data class ShoyoPalette(
     val panelTop: Color,
     val panelBottom: Color,
     val glass: Color,
-    val rowBg: Color
+    val rowBg: Color,
+    /** true = cantos arredondados (Cryogenic); false = paralelogramo (Industrial). */
+    val rounded: Boolean = false
 )
 
 object ShoyoPalettes {
@@ -135,7 +138,8 @@ object ShoyoPalettes {
         textSecondary = Color(0xFF9DBBD6),
         bg = Color(0xFF06122A), bgAlt = Color(0xFF0C2140),
         panelTop = Color(0xB3123058), panelBottom = Color(0xCC081A38),
-        glass = Color(0x66184070), rowBg = Color(0x99102A4E)
+        glass = Color(0x66184070), rowBg = Color(0x99102A4E),
+        rounded = true
     )
 
     val Industrial = ShoyoPalette(
@@ -157,7 +161,16 @@ object ShoyoPalettes {
 // =====================================================================
 object ShoyoUi {
     // Aparência
-    var paletteName by mutableStateOf("Cryogenic")
+    var paletteName by mutableStateOf("Cryogenic")   // legado (não usado)
+    // Estúdio de temas
+    var themeId by mutableStateOf("criogenico")
+    var themeSat by mutableFloatStateOf(0f)
+    var themeVib by mutableFloatStateOf(0f)
+    var themeCon by mutableFloatStateOf(0f)
+    var customA by mutableIntStateOf(0xFFB69CFF.toInt())
+    var customB by mutableIntStateOf(0xFFFFB6F0.toInt())
+    var gradAnim by mutableStateOf(false)
+    var gradSpeed by mutableFloatStateOf(50f)
     var glowOn by mutableStateOf(true)
     var glowLevel by mutableFloatStateOf(6f)        // 1..10
     var glowIntensity by mutableFloatStateOf(80f)   // 5..100 (%)
@@ -201,13 +214,20 @@ object ShoyoUi {
     // Setup inicial
     var setupDone by mutableStateOf(false)
 
-    val palette: ShoyoPalette get() = ShoyoPalettes.byName(paletteName)
+    val palette: ShoyoPalette get() = ThemeCatalog.paletteFor(themeId, themeSat, themeVib, themeCon, customA, customB)
 
     private const val FILE = "shoyo_ui"
 
     fun load(ctx: Context) {
         val p = ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE)
-        paletteName = p.getString("palette_v3", paletteName) ?: paletteName
+        themeId = p.getString("themeId", themeId) ?: themeId
+        themeSat = p.getFloat("themeSat", themeSat)
+        themeVib = p.getFloat("themeVib", themeVib)
+        themeCon = p.getFloat("themeCon", themeCon)
+        customA = p.getInt("customA", customA)
+        customB = p.getInt("customB", customB)
+        gradAnim = p.getBoolean("gradAnim", gradAnim)
+        gradSpeed = p.getFloat("gradSpeed", gradSpeed)
         glowOn = p.getBoolean("glowOn", glowOn)
         glowLevel = p.getFloat("glowLevel", glowLevel)
         glowIntensity = p.getFloat("glowIntensity", glowIntensity)
@@ -250,7 +270,14 @@ object ShoyoUi {
 
     fun save(ctx: Context) {
         ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE).edit()
-            .putString("palette_v3", paletteName)
+            .putString("themeId", themeId)
+            .putFloat("themeSat", themeSat)
+            .putFloat("themeVib", themeVib)
+            .putFloat("themeCon", themeCon)
+            .putInt("customA", customA)
+            .putInt("customB", customB)
+            .putBoolean("gradAnim", gradAnim)
+            .putFloat("gradSpeed", gradSpeed)
             .putBoolean("glowOn", glowOn)
             .putFloat("glowLevel", glowLevel)
             .putFloat("glowIntensity", glowIntensity)
@@ -338,8 +365,8 @@ fun ShoyoTheme(content: @Composable () -> Unit) {
 // =====================================================================
 //  FORMAS + BRILHO
 // =====================================================================
-val PanelShape: Shape = ParaShape(18.dp)
-val PillShape: Shape = ParaShape(10.dp)
+val PanelShape: Shape get() = ParaShape(18.dp)
+val PillShape: Shape get() = ParaShape(10.dp)
 
 /** Clique sem ripple, com um leve "afundar" suave ao tocar (spring amortecida). */
 fun Modifier.tap(onClick: () -> Unit): Modifier = composed {
@@ -377,33 +404,51 @@ fun NeonPanel(modifier: Modifier = Modifier, content: @Composable ColumnScope.()
             .glassSheen()
             .border(1.dp, ShoyoColors.PanelBorder, PanelShape)
             .paraAccents(18.dp)
-            .padding(start = 30.dp, end = 30.dp, top = 18.dp, bottom = 18.dp),
+            .padding(
+                start = if (ShoyoUi.palette.rounded) 20.dp else 30.dp,
+                end = if (ShoyoUi.palette.rounded) 20.dp else 30.dp,
+                top = 18.dp, bottom = 18.dp
+            ),
         content = content
     )
 }
 
-/** Item do menu lateral: paralelogramo numerado, escalonado (indent). */
+/** Item do menu lateral. Cryogenic: pílula com ícone em círculo. Industrial: paralelogramo numerado escalonado. */
 @Composable
 fun SideNavItem(icon: ImageVector, label: String, selected: Boolean, onClick: () -> Unit, number: Int = 0, indent: Dp = 0.dp) {
-    val shape = ParaShape(16.dp)
+    val rounded = ShoyoUi.palette.rounded
+    val shape = ParaShape(if (rounded) 14.dp else 16.dp)
     val bg = if (selected) Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.AccentDeep))
     else Brush.horizontalGradient(listOf(ShoyoColors.Glass, ShoyoColors.Glass))
     Row(
         modifier = Modifier
-            .padding(start = indent)
+            .padding(start = if (rounded) 0.dp else indent)
             .fillMaxWidth()
             .then(if (selected) Modifier.neonGlow(shape) else Modifier)
             .clip(shape)
             .background(bg)
             .border(1.dp, ShoyoColors.PanelBorder, shape)
             .tap(onClick)
-            .padding(start = 30.dp, end = 20.dp, top = 13.dp, bottom = 13.dp),
+            .padding(
+                start = if (rounded) 6.dp else 30.dp, end = 16.dp,
+                top = if (rounded) 6.dp else 13.dp, bottom = if (rounded) 6.dp else 13.dp
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            "%02d".format(number), color = if (selected) ShoyoColors.OnAccent else ShoyoColors.Accent,
-            fontFamily = FontFamily.Monospace, fontSize = 11.sp, fontWeight = FontWeight.Bold
-        )
+        if (rounded) {
+            Box(
+                Modifier.size(32.dp).clip(ParaShape(7.dp))
+                    .background(if (selected) ShoyoColors.Bg else ShoyoColors.IconChip),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(icon, null, tint = ShoyoColors.Accent, modifier = Modifier.size(18.dp))
+            }
+        } else {
+            Text(
+                "%02d".format(number), color = if (selected) ShoyoColors.OnAccent else ShoyoColors.Accent,
+                fontFamily = FontFamily.Monospace, fontSize = 11.sp, fontWeight = FontWeight.Bold
+            )
+        }
         Spacer(Modifier.width(12.dp))
         Text(label, color = if (selected) ShoyoColors.OnAccent else ShoyoColors.TextPrimary,
             style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)

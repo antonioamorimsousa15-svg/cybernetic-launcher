@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -47,8 +48,21 @@ import androidx.compose.ui.unit.sp
  * CYBERNETIC — linguagem visual própria: tudo é PARALELOGRAMO.
  * A borda de cima é deslocada para a direita (inclinação constante em dp).
  */
-class ParaShape(private val skew: Dp = 14.dp) : Shape {
+class ParaShape(
+    private val skew: Dp = 14.dp,
+    private val rounded: Boolean = ShoyoUi.palette.rounded
+) : Shape {
+    override fun equals(other: Any?) = other is ParaShape && other.skew == skew && other.rounded == rounded
+    override fun hashCode() = skew.hashCode() * 31 + rounded.hashCode()
+
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
+        if (rounded) {
+            // Cryogenic: cantos arredondados (skew pequeno = círculo/pílula; maior = cartão)
+            val r = if (skew.value <= 7f) size.height / 2f
+            else minOf(size.height / 2f, with(density) { (skew.value * 1.8f).coerceAtMost(26f).dp.toPx() })
+            return Outline.Rounded(androidx.compose.ui.geometry.RoundRect(0f, 0f, size.width, size.height,
+                androidx.compose.ui.geometry.CornerRadius(r, r)))
+        }
         val s = with(density) { skew.toPx() }.coerceAtMost(size.width / 3f)
         val p = Path().apply {
             moveTo(s, 0f); lineTo(size.width, 0f)
@@ -65,6 +79,7 @@ class ParaShape(private val skew: Dp = 14.dp) : Shape {
  */
 fun Modifier.paraAccents(skew: Dp = 14.dp, color: Color? = null, len: Dp = 34.dp, stroke: Dp = 3.dp): Modifier =
     drawBehind {
+        if (ShoyoUi.palette.rounded) return@drawBehind
         val c = color ?: ShoyoColors.Accent
         val s = skew.toPx().coerceAtMost(size.width / 3f)
         val l = len.toPx(); val t = (stroke + 2.dp).toPx()
@@ -89,6 +104,7 @@ fun Modifier.paraAccents(skew: Dp = 14.dp, color: Color? = null, len: Dp = 34.dp
 
 /** Fundo com hachuras diagonais finas, bem sutis (textura tecnológica). */
 fun Modifier.hatch(alpha: Float = 0.05f, gap: Dp = 14.dp): Modifier = drawBehind {
+    if (ShoyoUi.palette.rounded) return@drawBehind
     val g = gap.toPx(); val c = Color.White.copy(alpha = alpha)
     var x = -size.height
     while (x < size.width) {
@@ -97,13 +113,11 @@ fun Modifier.hatch(alpha: Float = 0.05f, gap: Dp = 14.dp): Modifier = drawBehind
     }
 }
 
-/** Texto de HUD em monoespaçado com LED pulsante: "// VERSÃO ATIVA". */
+/** Texto de HUD em monoespaçado com LED fixo: "// VERSÃO ATIVA". */
 @Composable
 fun HudLabel(text: String, modifier: Modifier = Modifier, color: Color = ShoyoColors.Accent) {
-    val t = rememberInfiniteTransition(label = "led")
-    val a by t.animateFloat(0.35f, 1f, infiniteRepeatable(tween(900, easing = LinearEasing), RepeatMode.Reverse), label = "a")
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.size(6.dp).background(color.copy(alpha = a)))
+        Box(Modifier.size(6.dp).background(color))
         Spacer(Modifier.width(8.dp))
         Text(
             text.uppercase(), color = color,
@@ -116,13 +130,23 @@ fun HudLabel(text: String, modifier: Modifier = Modifier, color: Color = ShoyoCo
 @Composable
 fun HeroPlayButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val shape = ParaShape(28.dp)
-    val t = rememberInfiniteTransition(label = "chev")
-    val phase by t.animateFloat(0f, 3f, infiniteRepeatable(tween(1500, easing = LinearEasing), RepeatMode.Restart), label = "p")
+    val a = ShoyoColors.Accent; val b = ShoyoColors.AccentDeep
+    var bg: Modifier = Modifier.background(Brush.horizontalGradient(listOf(a, b)))
+    if (ShoyoUi.gradAnim) {
+        // degradê em movimento (só neste botão; leitura do estado apenas na fase de desenho)
+        val t = rememberInfiniteTransition(label = "grad")
+        val ms = (9000 - (ShoyoUi.gradSpeed.coerceIn(5f, 100f) - 5f) / 95f * 7500f).toInt()
+        val shift = t.animateFloat(0f, 1f, infiniteRepeatable(tween(ms, easing = LinearEasing), RepeatMode.Restart), label = "s")
+        bg = Modifier.drawBehind {
+            val x = shift.value * size.width
+            drawRect(Brush.horizontalGradient(listOf(a, b), startX = x, endX = x + size.width, tileMode = androidx.compose.ui.graphics.TileMode.Mirror))
+        }
+    }
     Box(
         modifier
             .neonGlow(shape)
             .clip(shape)
-            .background(Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.AccentDeep)))
+            .then(bg)
             .tap(onClick)
             .padding(horizontal = 40.dp, vertical = 18.dp),
         contentAlignment = Alignment.Center
@@ -132,12 +156,7 @@ fun HeroPlayButton(text: String, modifier: Modifier = Modifier, onClick: () -> U
                 text.uppercase(), color = ShoyoColors.OnAccent, fontSize = 26.sp,
                 fontWeight = FontWeight.Black, letterSpacing = 10.sp
             )
-            Row {
-                for (i in 0 until 3) {
-                    val a = (1f - ((phase - i).let { if (it < 0) it + 3 else it }) / 3f).coerceIn(0.25f, 1f)
-                    Text("»", color = ShoyoColors.OnAccent.copy(alpha = a), fontSize = 26.sp, fontWeight = FontWeight.Black)
-                }
-            }
+            Text("»»", color = ShoyoColors.OnAccent, fontSize = 26.sp, fontWeight = FontWeight.Black)
         }
     }
 }
@@ -188,34 +207,23 @@ fun Modifier.glassSheen(): Modifier = drawBehind {
 }
 
 /**
- * Fundo "aurora": brilhos que derivam devagar (cor do tema) + estrelas.
- * Não pinta fundo opaco, então funciona sobre papel de parede.
+ * Fundo "aurora": brilhos suaves (cor do tema) + estrelas, tudo ESTÁTICO (sem animação, sem custo por quadro).
+ * Não pinta fundo opaco, então o papel de parede aparece por trás.
  */
 fun Modifier.auroraBackground(): Modifier = composed {
-    val t = rememberInfiniteTransition(label = "aurora")
-    val drift by t.animateFloat(0f, 1f, infiniteRepeatable(tween(14000, easing = LinearEasing), RepeatMode.Reverse), label = "d")
     val a = ShoyoColors.Accent; val b = ShoyoColors.AccentDeep; val c = ShoyoColors.Secondary
-    drawBehind {
+    drawWithCache {
         val w = size.width; val h = size.height
-        drawRect(Brush.verticalGradient(listOf(ShoyoColors.Bg, ShoyoColors.BgAlt)))
-        drawCircle(
-            Brush.radialGradient(listOf(a.copy(alpha = 0.30f), Color.Transparent), Offset(w * (0.25f + 0.35f * drift), h * 0.12f), w * 0.55f),
-            w * 0.55f, Offset(w * (0.25f + 0.35f * drift), h * 0.12f)
-        )
-        drawCircle(
-            Brush.radialGradient(listOf(b.copy(alpha = 0.22f), Color.Transparent), Offset(w * (0.8f - 0.3f * drift), h * 0.25f), w * 0.45f),
-            w * 0.45f, Offset(w * (0.8f - 0.3f * drift), h * 0.25f)
-        )
-        drawCircle(
-            Brush.radialGradient(listOf(c.copy(alpha = 0.08f), Color.Transparent), Offset(w * 0.1f, h * 0.95f), w * 0.4f),
-            w * 0.4f, Offset(w * 0.1f, h * 0.95f)
-        )
-        // estrelas fixas (posições pseudo-aleatórias determinísticas)
-        for (i in 0 until 70) {
-            val x = ((i * 7919) % 1000) / 1000f * w
-            val y = ((i * 104729) % 1000) / 1000f * h
-            val r = (0.6f + (i % 3) * 0.5f) * density
-            drawCircle(Color.White.copy(alpha = 0.12f + (i % 5) * 0.05f), r, Offset(x, y))
+        val g1 = Brush.radialGradient(listOf(a.copy(alpha = 0.22f), Color.Transparent), Offset(w * 0.35f, h * 0.10f), w * 0.55f)
+        val g2 = Brush.radialGradient(listOf(b.copy(alpha = 0.16f), Color.Transparent), Offset(w * 0.75f, h * 0.22f), w * 0.45f)
+        val g3 = Brush.radialGradient(listOf(c.copy(alpha = 0.06f), Color.Transparent), Offset(w * 0.1f, h * 0.95f), w * 0.4f)
+        onDrawBehind {
+            drawRect(g1); drawRect(g2); drawRect(g3)
+            for (i in 0 until 40) {
+                val x = ((i * 7919) % 1000) / 1000f * w
+                val y = ((i * 104729) % 1000) / 1000f * h
+                drawCircle(Color.White.copy(alpha = 0.10f + (i % 5) * 0.04f), (0.6f + (i % 3) * 0.5f) * density, Offset(x, y))
+            }
         }
     }
 }

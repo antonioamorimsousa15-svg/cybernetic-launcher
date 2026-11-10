@@ -11,6 +11,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -371,6 +372,13 @@ fun CyberWardrobeDialog(
                         }
                     }
 
+                    // capas locais (só você vê)
+                    if (account.isLocalAccount()) {
+                        WardrobeSection("CAPAS · SÓ VOCÊ VÊ") {
+                            LocalCapeGallery(account)
+                        }
+                    }
+
                     // mais opções
                     WardrobeSection("MAIS OPÇÕES") {
                         if (account.isMicrosoftAccount()) {
@@ -418,6 +426,58 @@ fun CyberWardrobeDialog(
                 showCapeSelector = false
             },
             onDismiss = { showCapeSelector = false }
+        )
+    }
+}
+
+
+/** Galeria de capas locais: importe PNGs de capa, toque para usar. A capa vai só para o seu jogo. */
+@Composable
+private fun LocalCapeGallery(account: Account) {
+    val ctx = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val dir = remember { File(ctx.filesDir, "local_capes").apply { mkdirs() } }
+    var refresh by remember { mutableStateOf(0) }
+    val files = remember(refresh) { (dir.listFiles { f -> f.extension.equals("png", true) } ?: emptyArray()).sortedBy { it.name } }
+    val usingBytes = remember(refresh) { account.getCapeFile().takeIf { it.exists() }?.readBytes() }
+
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        runCatching {
+            val name = "cape_" + System.currentTimeMillis() + ".png"
+            ctx.contentResolver.openInputStream(uri)!!.use { i -> File(dir, name).outputStream().use { o -> i.copyTo(o) } }
+            refresh++
+        }
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            SelectChip("Sem capa", usingBytes == null) {
+                account.getCapeFile().delete(); refresh++
+            }
+            SelectChip("+ Adicionar capa (.png)", false) { picker.launch(arrayOf("image/png")) }
+        }
+        files.forEach { f ->
+            val bytes = remember(f, refresh) { runCatching { f.readBytes() }.getOrNull() }
+            val active = usingBytes != null && bytes != null && usingBytes.contentEquals(bytes)
+            Row(
+                Modifier.fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(if (active) ShoyoColors.Accent.copy(alpha = 0.22f) else ShoyoColors.Glass)
+                    .border(1.dp, if (active) ShoyoColors.Accent else ShoyoColors.PanelBorder, RoundedCornerShape(12.dp))
+                    .clickable {
+                        runCatching { f.copyTo(account.getCapeFile(), overwrite = true) }; refresh++
+                    }
+                    .padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(f.nameWithoutExtension, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                if (active) Text("EM USO", color = ShoyoColors.Accent, style = MaterialTheme.typography.labelSmall)
+                Text("  ✕", color = ShoyoColors.TextSecondary, modifier = Modifier.clickable { f.delete(); refresh++ })
+            }
+        }
+        Text(
+            "Vale para conta offline. A capa só aparece no seu jogo; os outros jogadores não veem.",
+            color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.labelSmall
         )
     }
 }

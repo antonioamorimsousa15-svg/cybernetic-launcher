@@ -5,39 +5,35 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shoyoomc.cyberneticlauncher.cyber.theme.BadgeKind
-import com.shoyoomc.cyberneticlauncher.cyber.theme.HeroPlayButton
-import com.shoyoomc.cyberneticlauncher.cyber.theme.HudLabel
-import com.shoyoomc.cyberneticlauncher.cyber.theme.HudStat
-import com.shoyoomc.cyberneticlauncher.cyber.theme.NeonPanel
 import com.shoyoomc.cyberneticlauncher.cyber.theme.ParaShape
 import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
 import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoUi
-import com.shoyoomc.cyberneticlauncher.cyber.theme.StatusBadge
-import com.shoyoomc.cyberneticlauncher.cyber.theme.TelemetryBars
 import com.shoyoomc.cyberneticlauncher.cyber.theme.tap
 
-/** Início do CYBERNETIC: HUD em paralelogramos, ligado ao núcleo (conta/versão reais, JOGAR inicia o jogo). */
 @Composable
 fun CyberHomeScreen(
     accountName: String,
@@ -45,85 +41,148 @@ fun CyberHomeScreen(
     versionName: String?,
     onPlay: () -> Unit,
     onVersions: () -> Unit,
-    onAccounts: () -> Unit
+    onAccounts: () -> Unit,
+    onSettings: () -> Unit = {}
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) { ShoyoUi.load(context.applicationContext) }
 
-    Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        // ---------- coluna principal ----------
-        Column(Modifier.weight(1.5f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            NeonPanel(Modifier.fillMaxWidth().weight(1.35f)) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    HudLabel("// bem-vindo de volta, operador")
-                    HudLabel(if (isOfflineAccount) "conta offline" else "conta online", color = ShoyoColors.TextSecondary)
-                }
-                Text(
-                    accountName + "_", color = ShoyoColors.TextPrimary, fontSize = 46.sp,
-                    fontWeight = FontWeight.Black, maxLines = 1
-                )
-                Text("Sua aventura continua aqui.", color = ShoyoColors.TextSecondary, fontSize = 15.sp)
+    Column(
+        Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // ---- linha 1: boas-vindas + versão ----
+        Row(Modifier.fillMaxWidth().height(180.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            HomeCard(Modifier.weight(1.7f).fillMaxSize()) {
+                Text("Bem-vindo de volta,", color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleSmall)
+                Text(accountName, color = ShoyoColors.Accent, fontSize = 34.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                Text("Sua aventura congelada continua aqui.", color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
                 Spacer(Modifier.weight(1f))
-                HeroPlayButton("Jogar", Modifier.fillMaxWidth(), onPlay)
+                Pill(if (versionName != null) "▶  Jogar Agora" else "⬇  Baixar Minecraft", Modifier.width(200.dp),
+                    onClick = if (versionName != null) onPlay else onVersions)
             }
-            NeonPanel(Modifier.fillMaxWidth().weight(1f)) {
-                HudLabel("// suas versões")
+            HomeCard(Modifier.weight(1f).fillMaxSize()) {
+                Text("Versão do Minecraft", color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleSmall)
                 Spacer(Modifier.height(8.dp))
-                Text("Escolha, instale ou troque a versão do jogo.", color = ShoyoColors.TextSecondary, fontSize = 14.sp)
+                Text(versionName ?: "Nenhuma versão", color = ShoyoColors.TextPrimary, fontSize = 22.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                Text(if (versionName != null) "Pronta para jogar" else "Escolha uma versão para começar",
+                    color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.labelSmall)
                 Spacer(Modifier.weight(1f))
-                Box(
-                    Modifier.fillMaxWidth().clip(ParaShape(12.dp))
-                        .border(1.dp, ShoyoColors.PanelBorder, ParaShape(12.dp))
-                        .tap(onVersions).padding(vertical = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("VER VERSÕES", color = ShoyoColors.TextPrimary, fontWeight = FontWeight.Bold, letterSpacing = 3.sp)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Pill(if (versionName != null) "JOGAR" else "Instalar", Modifier.weight(1f),
+                        onClick = if (versionName != null) onPlay else onVersions)
+                    RoundIcon("⚙", onVersions)
                 }
             }
         }
-        // ---------- coluna lateral ----------
-        Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            NeonPanel(Modifier.fillMaxWidth().weight(1.25f)) {
-                HudLabel("// versão ativa")
-                Text(
-                    versionName ?: "NENHUMA", color = ShoyoColors.TextPrimary, fontSize = 30.sp,
-                    fontWeight = FontWeight.Black, maxLines = 1
-                )
-                Spacer(Modifier.height(6.dp))
-                if (versionName != null) StatusBadge("Selecionada", BadgeKind.Selected)
-                Spacer(Modifier.weight(1f))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    HudStat("Render", "GL")
-                    HudStat("Perfil", "OFFLINE".takeIf { isOfflineAccount } ?: "ONLINE")
+
+        // ---- linha 2: versões, conta, destaque ----
+        Row(Modifier.fillMaxWidth().height(170.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            HomeCard(Modifier.weight(1.25f).fillMaxSize()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Suas versões", color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                    Text("Ver todas ›", color = ShoyoColors.Accent, style = MaterialTheme.typography.labelMedium, modifier = Modifier.tap(onVersions))
                 }
-                Spacer(Modifier.height(8.dp))
-                Box(
-                    Modifier.fillMaxWidth().clip(ParaShape(10.dp)).border(1.dp, ShoyoColors.PanelBorder, ParaShape(10.dp))
-                        .tap(onVersions).padding(vertical = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) { Text("TROCAR VERSÃO", color = ShoyoColors.TextPrimary, fontWeight = FontWeight.Bold, letterSpacing = 2.sp, fontSize = 12.sp) }
+                Spacer(Modifier.weight(1f))
+                Text(versionName ?: "Suas versões instaladas aparecerão aqui.", color = ShoyoColors.TextSecondary,
+                    style = MaterialTheme.typography.bodySmall, modifier = Modifier.align(Alignment.CenterHorizontally))
+                Spacer(Modifier.weight(1f))
             }
-            NeonPanel(Modifier.fillMaxWidth().weight(1f)) {
-                HudLabel("// conta ativa")
-                Spacer(Modifier.height(6.dp))
+            HomeCard(Modifier.weight(1.25f).fillMaxSize()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Conta", color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                    Pill("Skins", Modifier.width(80.dp), onClick = onAccounts)
+                }
+                Spacer(Modifier.weight(1f))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
-                        Modifier.size(46.dp).clip(ParaShape(10.dp)).background(ShoyoColors.IconChip),
+                        Modifier.size(44.dp).clip(CircleShape).background(ShoyoColors.IconChip)
+                            .border(1.dp, ShoyoColors.Accent, CircleShape),
                         contentAlignment = Alignment.Center
-                    ) { Text(accountName.take(1).uppercase(), color = ShoyoColors.Accent, fontWeight = FontWeight.Black, fontSize = 22.sp) }
-                    Spacer(Modifier.width(12.dp))
+                    ) { Text(accountName.take(1).uppercase(), color = ShoyoColors.Accent, fontWeight = FontWeight.Bold, fontSize = 20.sp) }
+                    Spacer(Modifier.width(10.dp))
                     Column {
-                        Text(accountName, color = ShoyoColors.TextPrimary, fontWeight = FontWeight.Bold, fontSize = 20.sp, maxLines = 1)
-                        Text("GUARDA-ROUPA DISPONÍVEL", color = ShoyoColors.TextSecondary, fontFamily = FontFamily.Monospace, fontSize = 10.sp, letterSpacing = 1.sp)
+                        Text(accountName, color = ShoyoColors.TextPrimary, fontWeight = FontWeight.Bold, maxLines = 1)
+                        Text(if (isOfflineAccount) "● Conta offline" else "● Conta online", color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.labelSmall)
                     }
                 }
                 Spacer(Modifier.weight(1f))
-                Box(
-                    Modifier.fillMaxWidth().clip(ParaShape(10.dp)).border(1.dp, ShoyoColors.PanelBorder, ParaShape(10.dp))
-                        .tap(onAccounts).padding(vertical = 8.dp),
-                    contentAlignment = Alignment.Center
-                ) { Text("GERENCIAR CONTA", color = ShoyoColors.TextPrimary, fontWeight = FontWeight.Bold, letterSpacing = 2.sp, fontSize = 12.sp) }
+                GhostPill("⚙  Gerenciar Conta", Modifier.fillMaxWidth(), onAccounts)
+            }
+            Box(
+                Modifier.weight(0.8f).fillMaxSize().clip(ParaShape(22.dp))
+                    .background(Brush.verticalGradient(listOf(ShoyoColors.AccentDeep, ShoyoColors.Bg, ShoyoColors.SecondaryDeep)))
+                    .border(1.dp, ShoyoColors.PanelBorder, ParaShape(22.dp)),
+                contentAlignment = Alignment.Center
+            ) { Text("❄", color = ShoyoColors.Accent, fontSize = 48.sp) }
+        }
+
+        // ---- linha 3: shaders e mods ----
+        Row(Modifier.fillMaxWidth().height(150.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            HomeCard(Modifier.weight(1f).fillMaxSize()) {
+                Text("💡 Shaders", color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleSmall)
+                Text("Deixe seu mundo mais bonito com shaders.", color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
+                Spacer(Modifier.weight(1f))
+                Pill("Explorar ›", Modifier.fillMaxWidth(), onClick = onVersions)
+            }
+            HomeCard(Modifier.weight(1f).fillMaxSize()) {
+                Text("🧩 Mods", color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleSmall)
+                Text("Turbine suas versões com mods novos.", color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.bodySmall)
+                Spacer(Modifier.weight(1f))
+                Pill("Ver mods ›", Modifier.fillMaxWidth(), onClick = onVersions)
             }
         }
+
+        // ---- configurações rápidas ----
+        HomeCard(Modifier.fillMaxWidth()) {
+            Text("⚙  Configurações Rápidas", color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleSmall)
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                listOf("Gráficos", "Jogo", "Toque", "Aparência").forEach {
+                    Box(
+                        Modifier.weight(1f).height(54.dp).clip(ParaShape(14.dp))
+                            .background(ShoyoColors.Glass).border(1.dp, ShoyoColors.PanelBorder, ParaShape(14.dp))
+                            .tap(onSettings),
+                        contentAlignment = Alignment.Center
+                    ) { Text(it, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.labelLarge) }
+                }
+            }
+        }
+        Spacer(Modifier.height(8.dp))
     }
+}
+
+@Composable
+private fun HomeCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    val shape = ParaShape(22.dp)
+    Column(
+        modifier.clip(shape).background(ShoyoColors.Glass).border(1.dp, ShoyoColors.PanelBorder, shape).padding(14.dp),
+        content = content
+    )
+}
+
+@Composable
+private fun Pill(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Box(
+        modifier.height(40.dp).clip(CircleShape)
+            .background(Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.Secondary)))
+            .tap(onClick),
+        contentAlignment = Alignment.Center
+    ) { Text(text, color = ShoyoColors.OnAccent, fontWeight = FontWeight.Bold, maxLines = 1) }
+}
+
+@Composable
+private fun GhostPill(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Box(
+        modifier.height(38.dp).clip(CircleShape).border(1.dp, ShoyoColors.PanelBorder, CircleShape).tap(onClick),
+        contentAlignment = Alignment.Center
+    ) { Text(text, color = ShoyoColors.TextPrimary, fontWeight = FontWeight.Bold, maxLines = 1) }
+}
+
+@Composable
+private fun RoundIcon(glyph: String, onClick: () -> Unit) {
+    Box(
+        Modifier.size(40.dp).clip(CircleShape).border(1.dp, ShoyoColors.PanelBorder, CircleShape).tap(onClick),
+        contentAlignment = Alignment.Center
+    ) { Text(glyph, color = ShoyoColors.TextPrimary) }
 }

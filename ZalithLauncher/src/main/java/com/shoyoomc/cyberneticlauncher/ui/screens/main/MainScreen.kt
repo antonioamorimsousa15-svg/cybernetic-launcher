@@ -252,11 +252,9 @@ fun MainScreen(
                     .weight(1f)
             ) {
               androidx.compose.animation.AnimatedVisibility(
-                visible = sidebarOpen,
-                enter = androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(280)) +
-                    androidx.compose.animation.expandHorizontally(androidx.compose.animation.core.tween(320, easing = androidx.compose.animation.core.FastOutSlowInEasing)),
-                exit = androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(180)) +
-                    androidx.compose.animation.shrinkHorizontally(androidx.compose.animation.core.tween(260, easing = androidx.compose.animation.core.FastOutSlowInEasing))
+                visible = true,
+                enter = androidx.compose.animation.EnterTransition.None,
+                exit = androidx.compose.animation.ExitTransition.None
               ) {
                 ShoyoSidebar(
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
@@ -379,7 +377,9 @@ private fun <E: TitledNavKey> TopBar(
                 }
 
                 AnimatedVisibility(
-                    visible = !inLauncherScreen
+                    visible = !inLauncherScreen,
+                    enter = androidx.compose.animation.EnterTransition.None,
+                    exit = androidx.compose.animation.ExitTransition.None
                 ) {
                     Row(modifier = Modifier.fillMaxHeight()) {
                         Spacer(Modifier.width(12.dp))
@@ -423,6 +423,7 @@ private fun <E: TitledNavKey> TopBar(
             val childRes = (mainScreenKey as? BackStackNavKey<*>)?.currentKey?.title
 
             Crossfade(
+                animationSpec = androidx.compose.animation.core.snap(),
                 modifier = Modifier.constrainAs(title) {
                     centerVerticallyTo(parent)
                     start.linkTo(backCenter.end, margin = 16.dp)
@@ -476,12 +477,8 @@ private fun <E: TitledNavKey> TopBar(
             ) {
                 AnimatedVisibility(
                     visible = !(isTasksExpanded || taskRunning),
-                    enter = slideInVertically(
-                        initialOffsetY = { -50 }
-                    ) + fadeIn(),
-                    exit = slideOutVertically(
-                        targetOffsetY = { -50 }
-                    ) + fadeOut()
+                    enter = androidx.compose.animation.EnterTransition.None,
+                    exit = androidx.compose.animation.ExitTransition.None
                 ) {
                     Row(
                         modifier = Modifier
@@ -554,7 +551,7 @@ private fun TopBarRailItem(
         modifier = modifier,
         onClick = onClick,
         text = {
-            AnimatedVisibility(visible = selected) {
+            AnimatedVisibility(visible = selected, enter = androidx.compose.animation.EnterTransition.None, exit = androidx.compose.animation.ExitTransition.None) {
                 Row {
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
@@ -643,6 +640,12 @@ private fun NavigationUI(
                             screenBackStackModel.mainScreen.removeAndNavigateTo(
                                 removes = screenBackStackModel.clearBeforeNavKeys,
                                 screenKey = NormalNavKey.AccountManager()
+                            )
+                        },
+                        onSettings = {
+                            screenBackStackModel.mainScreen.removeAndNavigateTo(
+                                removes = screenBackStackModel.clearBeforeNavKeys,
+                                screenKey = screenBackStackModel.settingsScreen
                             )
                         }
                     )
@@ -770,14 +773,8 @@ private fun TaskMenu(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     AnimatedVisibility(
         modifier = modifier,
-        enter = slideInHorizontally(
-            initialOffsetX = { if (isRtl) it else -it },
-            animationSpec = getAnimateTween()
-        ) + fadeIn(),
-        exit = slideOutHorizontally(
-            targetOffsetX = { if (isRtl) it else -it },
-            animationSpec = getAnimateTween()
-        ) + fadeOut(),
+        enter = androidx.compose.animation.EnterTransition.None,
+        exit = androidx.compose.animation.ExitTransition.None,
         visible = show
     ) {
         BackgroundCard(

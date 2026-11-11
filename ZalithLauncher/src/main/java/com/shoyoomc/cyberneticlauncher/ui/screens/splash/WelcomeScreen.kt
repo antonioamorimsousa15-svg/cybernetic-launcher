@@ -61,6 +61,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
@@ -118,7 +119,20 @@ fun WelcomeScreen(
             modifier = modifier.background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            if (maxWidth >= 800.dp && maxHeight >= 500.dp) {
+            if (true) {
+                WelcomeInformation(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                    started = started,
+                    onStart = onStart,
+                    availableAgreement = availableAgreement,
+                    agreementRequired = agreementRequired,
+                    agreementChecked = agreementChecked,
+                    onAgreementCheckedChange = { agreementChecked = it },
+                    onAgreementRequiredChange = { agreementRequired = it },
+                )
+            } else if (maxWidth >= 800.dp && maxHeight >= 500.dp) {
                 // 平板布局
                 TabletWelcomeScreen(
                     isVisible = isVisible,
@@ -456,6 +470,8 @@ private fun WelcomeInformation(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            WelcomeHero(modifier = Modifier.fillMaxWidth())
+
             WelcomeIntroduction(
                 availableAgreement = availableAgreement,
                 agreementChecked = agreementChecked,
@@ -491,9 +507,43 @@ private fun ProductBanner(
         )
 
         Text(
-            text = BuildKeys.LAUNCHER_NAME,
+            text = BuildKeys.LAUNCHER_NAME.uppercase(),
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.Accent
+        )
+    }
+}
+
+/** Cartão grande de boas-vindas. */
+@Composable
+private fun WelcomeHero(modifier: Modifier = Modifier) {
+    val pal = com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
+    val shape = androidx.compose.foundation.shape.RoundedCornerShape(36.dp)
+    Column(
+        modifier = modifier
+            .clip(shape)
+            .background(pal.AccentDeep.copy(alpha = 0.55f))
+            .padding(horizontal = 28.dp, vertical = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Box(
+            Modifier.clip(androidx.compose.foundation.shape.CircleShape)
+                .background(pal.Bg.copy(alpha = 0.45f))
+                .padding(horizontal = 14.dp, vertical = 6.dp)
+        ) {
+            Text("♥  MADE WITH HEART  ♥", color = pal.TextPrimary, style = MaterialTheme.typography.labelMedium)
+        }
+        Text(
+            text = "WELCOME!_",
+            color = pal.TextPrimary,
+            style = MaterialTheme.typography.displayMedium,
+            fontWeight = FontWeight.Black
+        )
+        Text(
+            text = "Sinta o frio de uma nova experiência.",
+            color = pal.TextSecondary,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
@@ -551,11 +601,11 @@ private fun WelcomeIntroduction(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.welcome_screen_intro_primary, BuildKeys.LAUNCHER_NAME),
+                    text = "Bem-vindo ao ${BuildKeys.LAUNCHER_NAME}, um launcher de terceiros para Minecraft: Java Edition feito para dispositivos Android.",
                     lineHeight = 26.sp
                 )
                 Text(
-                    text = stringResource(R.string.welcome_screen_intro_core),
+                    text = "Uma experiência moderna, leve e confortável para iniciar e gerenciar o seu Minecraft.",
                     lineHeight = 26.sp
                 )
             }

@@ -19,12 +19,18 @@
 package com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.layouts
 
 import androidx.compose.foundation.layout.Arrangement
+import com.shoyoomc.cyberneticlauncher.cyber.theme.techFrame
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -171,10 +177,10 @@ fun SettingsCard(
 ) {
     val shape = rememberSettingsCardShape(position, outerShape, innerShape)
 
-    BackgroundCard(
+    SettingsBackground(
         modifier = modifier,
         shape = shape,
-        border = settingsCardBorder(),
+        position = position,
         content = { Column(Modifier.padding(horizontal = 12.dp), content = content) }
     )
 }
@@ -191,10 +197,10 @@ fun SettingsCard(
 ) {
     val shape = rememberSettingsCardShape(position, outerShape, innerShape)
 
-    BackgroundCard(
+    SettingsBackground(
         modifier = modifier,
         shape = shape,
-        border = settingsCardBorder(),
+        position = position,
         onClick = onClick,
         enabled = enabled,
         content = { Column(Modifier.padding(horizontal = 12.dp), content = content) }
@@ -218,10 +224,10 @@ fun SettingsCard(
 ) {
     val shape = rememberSettingsCardShape(position, outerShape, innerShape)
 
-    BackgroundCard(
+    SettingsBackground(
         modifier = modifier,
         shape = shape,
-        border = settingsCardBorder(),
+        position = position,
         onClick = onClick,
         enabled = enabled
     ) {
@@ -252,14 +258,52 @@ fun SettingsCard(
 private fun settingsCardBorder() =
     androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.40f))
 
+/** Dentro de um [SettingsCardColumn] os cartões viram linhas de um único painel de vidro, separadas por fios. */
+val LocalSettingsGroup = androidx.compose.runtime.compositionLocalOf { false }
+
+@Composable
+private fun SettingsBackground(
+    modifier: Modifier,
+    shape: Shape,
+    position: CardPosition,
+    onClick: (() -> Unit)? = null,
+    enabled: Boolean = true,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    if (LocalSettingsGroup.current) {
+        Column(modifier) {
+            if (position != CardPosition.Top) {
+                androidx.compose.foundation.layout.Box(
+                    Modifier.fillMaxWidth().padding(horizontal = 14.dp).height(1.dp)
+                        .background(com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.PanelBorder.copy(alpha = 0.35f))
+                )
+            }
+            Column(
+                if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick) else Modifier,
+                content = content
+            )
+        }
+    } else if (onClick != null) {
+        BackgroundCard(modifier = modifier, shape = shape, border = settingsCardBorder(), onClick = onClick, enabled = enabled, content = content)
+    } else {
+        BackgroundCard(modifier = modifier, shape = shape, border = settingsCardBorder(), content = content)
+    }
+}
+
 @Composable
 fun SettingsCardColumn(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-        content = content
-    )
+    val panel = remember { ParaShape(24.dp) }
+    androidx.compose.runtime.CompositionLocalProvider(LocalSettingsGroup provides true) {
+        Column(
+            modifier = modifier
+                .clip(panel)
+                .background(com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.Glass)
+                .border(1.dp, com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.PanelBorder, panel)
+                .techFrame(),
+            content = content
+        )
+    }
 }

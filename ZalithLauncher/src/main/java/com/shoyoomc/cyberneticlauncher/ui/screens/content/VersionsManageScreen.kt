@@ -19,9 +19,12 @@
 package com.shoyoomc.cyberneticlauncher.ui.screens.content
 
 import android.os.Environment
+import com.shoyoomc.cyberneticlauncher.cyber.theme.techFrame
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -55,6 +58,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
@@ -364,10 +368,28 @@ private fun LeftMenu(
 ) {
     val ctx = rememberAnimatedContext(isVisible = isVisible)
 
+    val panelShape = remember { com.shoyoomc.cyberneticlauncher.cyber.theme.ParaShape(24.dp) }
     Column(
-        modifier = modifier.animated(ctx, from = AnimatedDirection.Left),
+        modifier = modifier
+            .padding(top = 8.dp, bottom = 8.dp, start = 8.dp)
+            .clip(panelShape)
+            .background(com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.Glass)
+            .border(1.dp, com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.PanelBorder, panelShape)
+            .techFrame(),
     ) {
         val gamePaths by GamePathManager.gamePathData.collectAsStateWithLifecycle()
+        Column(Modifier.padding(start = 16.dp, top = 14.dp, end = 12.dp)) {
+            Text(
+                "// HANGAR · DIRETÓRIOS",
+                color = com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.Accent,
+                style = MaterialTheme.typography.labelLarge
+            )
+            Text(
+                "${gamePaths.size} pastas de jogo",
+                color = com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.TextSecondary,
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
         val currentPath by GamePathManager.currentPath.collectAsStateWithLifecycle()
         val context = LocalContext.current
 
@@ -377,7 +399,8 @@ private fun LeftMenu(
                 .weight(1f),
             contentPadding = PaddingValues(
                 start = 12.dp,
-                top = 12.dp,
+                end = 12.dp,
+                top = 10.dp,
                 bottom = 12.dp
             )
         ) {
@@ -417,7 +440,7 @@ private fun LeftMenu(
         GhostButton(
             stringResource(R.string.versions_manage_game_path_add_new), null,
             Modifier
-                .padding(start = 12.dp)
+                .padding(horizontal = 12.dp)
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
             {
@@ -437,7 +460,7 @@ private fun LeftMenu(
         GhostButton(
             stringResource(R.string.versions_manage_cleanup), null,
             Modifier
-                .padding(start = 12.dp, top = 8.dp, bottom = 12.dp)
+                .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 12.dp)
                 .fillMaxWidth(),
             onCleanupGameFiles
         )

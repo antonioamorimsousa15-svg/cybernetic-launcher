@@ -1,6 +1,7 @@
 package com.shoyoomc.cyberneticlauncher.cyber.screens
 
 import androidx.compose.foundation.background
+import com.shoyoomc.cyberneticlauncher.cyber.theme.techFrame
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -156,7 +157,8 @@ fun CyberHomeScreen(
 private fun HomeCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     val shape = ParaShape(22.dp)
     Column(
-        modifier.clip(shape).background(ShoyoColors.Glass).border(1.dp, ShoyoColors.PanelBorder, shape).padding(14.dp),
+        modifier.clip(shape).background(ShoyoColors.Glass).border(1.dp, ShoyoColors.PanelBorder, shape)
+            .techFrame().padding(14.dp),
         content = content
     )
 }

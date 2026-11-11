@@ -121,7 +121,7 @@ fun HudLabel(text: String, modifier: Modifier = Modifier, color: Color = ShoyoCo
         Spacer(Modifier.width(8.dp))
         Text(
             text.uppercase(), color = color,
-            fontFamily = FontFamily.Monospace, fontSize = 11.sp, letterSpacing = 2.sp
+            fontFamily = com.shoyoomc.cyberneticlauncher.ui.theme.SpaceGrotesk, fontSize = 11.sp, letterSpacing = 2.sp
         )
     }
 }
@@ -132,7 +132,7 @@ fun HeroPlayButton(text: String, modifier: Modifier = Modifier, onClick: () -> U
     val shape = ParaShape(28.dp)
     val a = ShoyoColors.Accent; val b = ShoyoColors.AccentDeep
     var bg: Modifier = Modifier.background(Brush.horizontalGradient(listOf(a, b)))
-    if (ShoyoUi.gradAnim) {
+    if (false && ShoyoUi.gradAnim) {
         // degradê em movimento (só neste botão; leitura do estado apenas na fase de desenho)
         val t = rememberInfiniteTransition(label = "grad")
         val ms = (9000 - (ShoyoUi.gradSpeed.coerceIn(5f, 100f) - 5f) / 95f * 7500f).toInt()
@@ -190,8 +190,8 @@ fun HudStat(label: String, value: String, modifier: Modifier = Modifier) {
             .padding(start = 16.dp, end = 18.dp, top = 6.dp, bottom = 6.dp)
     ) {
         androidx.compose.foundation.layout.Column {
-            Text(label.uppercase(), color = ShoyoColors.TextSecondary, fontFamily = FontFamily.Monospace, fontSize = 10.sp, letterSpacing = 2.sp)
-            Text(value, color = ShoyoColors.TextPrimary, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(label.uppercase(), color = ShoyoColors.TextSecondary, fontFamily = com.shoyoomc.cyberneticlauncher.ui.theme.SpaceGrotesk, fontSize = 10.sp, letterSpacing = 2.sp)
+            Text(value, color = ShoyoColors.TextPrimary, fontFamily = com.shoyoomc.cyberneticlauncher.ui.theme.SpaceGrotesk, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
     }
 }
@@ -219,11 +219,39 @@ fun Modifier.auroraBackground(): Modifier = composed {
         val g3 = Brush.radialGradient(listOf(c.copy(alpha = 0.06f), Color.Transparent), Offset(w * 0.1f, h * 0.95f), w * 0.4f)
         onDrawBehind {
             drawRect(g1); drawRect(g2); drawRect(g3)
+            // grade técnica sutil
+            val step = 48f * density
+            var gx = 0f
+            while (gx < w) { drawLine(Color.White.copy(alpha = 0.025f), Offset(gx, 0f), Offset(gx, h), 1f); gx += step }
+            var gy = 0f
+            while (gy < h) { drawLine(Color.White.copy(alpha = 0.025f), Offset(0f, gy), Offset(w, gy), 1f); gy += step }
             for (i in 0 until 40) {
                 val x = ((i * 7919) % 1000) / 1000f * w
                 val y = ((i * 104729) % 1000) / 1000f * h
                 drawCircle(Color.White.copy(alpha = 0.10f + (i % 5) * 0.04f), (0.6f + (i % 3) * 0.5f) * density, Offset(x, y))
             }
+        }
+    }
+}
+
+
+/** Colchetes de canto (topo-direita e base-direita) no estilo HUD técnico. Estático, sem animação. */
+fun Modifier.techFrame(): Modifier = composed {
+    val a = ShoyoColors.Accent
+    val b = ShoyoColors.Secondary
+    drawWithCache {
+        val len = 26f * density
+        val inset = 2f * density
+        val sw = 3f * density
+        onDrawWithContent {
+            drawContent()
+            val w = size.width; val h = size.height
+            // topo-direita
+            drawLine(a, Offset(w - len - inset, inset), Offset(w - inset, inset), sw)
+            drawLine(a, Offset(w - inset, inset), Offset(w - inset, len + inset), sw)
+            // base-direita
+            drawLine(b, Offset(w - len - inset, h - inset), Offset(w - inset, h - inset), sw)
+            drawLine(b, Offset(w - inset, h - len - inset), Offset(w - inset, h - inset), sw)
         }
     }
 }

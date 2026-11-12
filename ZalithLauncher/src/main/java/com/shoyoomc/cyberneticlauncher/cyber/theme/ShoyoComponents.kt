@@ -371,7 +371,10 @@ fun GlassPill(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, cont
             .background(ShoyoColors.Glass)
             .border(1.dp, ShoyoColors.PanelBorder, PillShape)
             .then(if (onClick != null) Modifier.tap(onClick) else Modifier)
-            .padding(start = 22.dp, end = 22.dp, top = 8.dp, bottom = 8.dp),
+            .padding(
+                start = if (ShoyoUi.palette.rounded) 8.dp else 22.dp, end = if (ShoyoUi.palette.rounded) 18.dp else 22.dp,
+                top = 6.dp, bottom = 6.dp
+            ),
         verticalAlignment = Alignment.CenterVertically, content = content
     )
 }
@@ -392,7 +395,7 @@ fun ShoyoTopBar(
             Spacer(Modifier.width(10.dp))
             Column {
                 Text(appName, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleMedium)
-                Text("LAUNCHER · $version", color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.labelSmall)
+                Text("LAUNCHER  $version", color = ShoyoColors.TextSecondary, style = MaterialTheme.typography.labelSmall)
             }
         }
         GlassPill(onClick = onBack) {
@@ -400,7 +403,6 @@ fun ShoyoTopBar(
                 Icon(backIcon, null, tint = ShoyoColors.OnAccent)
             }
             Spacer(Modifier.width(10.dp))
-            HudLabel("SYS//", color = ShoyoColors.Accent); Spacer(Modifier.width(8.dp))
             Text(breadcrumb, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleMedium)
         }
         Spacer(Modifier.weight(1f))
@@ -417,7 +419,7 @@ fun ShoyoTopBar(
                 Modifier.size(34.dp).clip(ParaShape(7.dp)).background(ShoyoColors.IconChip),
                 contentAlignment = Alignment.Center
             ) {
-                Text(userName.take(1).uppercase(), color = ShoyoColors.Accent, fontWeight = FontWeight.Bold)
+                Text(if (userName == "Adicionar Conta") "+" else userName.take(1).uppercase(), color = ShoyoColors.Accent, fontWeight = FontWeight.Bold)
             }
             Spacer(Modifier.width(10.dp))
             Text(userName, color = ShoyoColors.TextPrimary, style = MaterialTheme.typography.titleMedium)

@@ -18,24 +18,32 @@
 
 package com.shoyoomc.cyberneticlauncher.ui.components
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.R
+import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
 
+/**
+ * Switch no estilo Cybernetic: trilho em pílula (degradê quando ligado, só contorno quando
+ * desligado) e botão redondo. Sem animação.
+ */
 @Composable
 fun DefaultSwitch(
     checked: Boolean,
@@ -45,44 +53,37 @@ fun DefaultSwitch(
     colors: SwitchColors = SwitchDefaults.colors(),
     interactionSource: MutableInteractionSource? = null
 ) {
-    Switch(
-        checked = checked,
-        onCheckedChange = onCheckedChange,
-        modifier = modifier,
-        enabled = enabled,
-        thumbContent = {
-            val rotation by animateFloatAsState(
-                if (checked) 0.0f else -(180.0f)
-            )
-            Crossfade(
-                modifier = Modifier.rotate(rotation),
-                targetState = checked
-            ) {
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    painter = painterResource(
-                        if (it) R.drawable.ic_check else R.drawable.ic_close
-                    ),
-                    contentDescription = null,
-                    tint = colors.trackColor(enabled, checked)
-                )
-            }
-        },
-        colors = colors,
-        interactionSource = interactionSource
-    )
-}
-
-/**
- * Represents the color used for the switch's track, depending on [enabled] and [checked].
- *
- * @param enabled whether the [Switch] is enabled or not
- * @param checked whether the [Switch] is checked or not
- */
-@Stable
-private fun SwitchColors.trackColor(enabled: Boolean, checked: Boolean): Color =
-    if (enabled) {
-        if (checked) checkedTrackColor else uncheckedTrackColor
+    val source = interactionSource ?: remember { MutableInteractionSource() }
+    val track = if (checked) {
+        Modifier.background(Brush.horizontalGradient(listOf(ShoyoColors.Accent, ShoyoColors.Secondary)))
+            .border(2.dp, Color.Transparent, CircleShape)
     } else {
-        if (checked) disabledCheckedTrackColor else disabledUncheckedTrackColor
+        Modifier.background(ShoyoColors.Bg.copy(alpha = 0.55f))
+            .border(2.dp, ShoyoColors.TextPrimary.copy(alpha = 0.9f), CircleShape)
     }
+    Box(
+        modifier = modifier
+            .alpha(if (enabled) 1f else 0.45f)
+            .size(width = 52.dp, height = 30.dp)
+            .clip(CircleShape)
+            .then(track)
+            .toggleable(
+                value = checked,
+                enabled = enabled,
+                role = Role.Switch,
+                interactionSource = source,
+                indication = null,
+                onValueChange = onCheckedChange
+            )
+            .padding(4.dp),
+        contentAlignment = if (checked) Alignment.CenterEnd else Alignment.CenterStart
+    ) {
+        Box(
+            Modifier.size(22.dp).clip(CircleShape)
+                .background(if (checked) ShoyoColors.Bg else Color.White),
+            contentAlignment = Alignment.Center
+        ) {
+            if (checked) Box(Modifier.size(8.dp).clip(CircleShape).background(Color.White))
+        }
+    }
+}

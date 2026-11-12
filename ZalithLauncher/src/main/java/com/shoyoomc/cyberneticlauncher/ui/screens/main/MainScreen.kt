@@ -205,10 +205,10 @@ fun MainScreen(
             val topAccount by AccountsManager.currentAccountFlow.collectAsStateWithLifecycle()
 
             ShoyoTopBar(
-                appName = "CYBERNETIC",
+                appName = "Cybernetic",
                 version = "v" + BuildConfig.VERSION_NAME,
                 breadcrumb = breadcrumb,
-                userName = topAccount?.username ?: "Steve",
+                userName = topAccount?.username ?: "Adicionar Conta",
                 logo = painterResource(R.drawable.ic_launcher_fg_img),
                 backIcon = Icons.AutoMirrored.Filled.ArrowBack,
                 filesIcon = Icons.Filled.Folder,

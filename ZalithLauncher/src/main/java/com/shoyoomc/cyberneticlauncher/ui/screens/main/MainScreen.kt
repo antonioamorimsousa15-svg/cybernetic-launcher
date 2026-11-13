@@ -61,6 +61,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
+import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
@@ -173,19 +175,45 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .paint(painterResource(R.drawable.cyber_bg), contentScale = androidx.compose.ui.layout.ContentScale.Crop)
+                .background(Color(0x99100A02))
         ) {
+            CyberTopBar(
+                sectionTitle = when {
+                    inLauncherScreen -> "Início"
+                    mainScreenKey is NormalNavKey.VersionsManager -> "Versões"
+                    mainScreenKey is NestedNavKey.Download -> "Download"
+                    mainScreenKey is NormalNavKey.AccountManager -> "Contas"
+                    mainScreenKey is NestedNavKey.Settings -> "Ajustes"
+                    else -> "Cybernetic"
+                },
+                onLogo = toMainScreen,
+                onFiles = {
+                    eventViewModel.sendEvent(
+                        EventViewModel.Event.OpenFileManager(
+                            rootPath = PathManager.DIR_FILES_EXTERNAL.absolutePath
+                        )
+                    )
+                },
+                onUser = {
+                    screenBackStackModel.mainScreen.removeAndNavigateTo(
+                        removes = screenBackStackModel.clearBeforeNavKeys,
+                        screenKey = NormalNavKey.AccountManager()
+                    )
+                }
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-            CyberLeftColumn(
+            CyberSidebar(
                 inHome = inLauncherScreen,
                 inVersions = mainScreenKey is NormalNavKey.VersionsManager,
                 inDownload = mainScreenKey is NestedNavKey.Download,
                 inAccounts = mainScreenKey is NormalNavKey.AccountManager,
                 inSettings = mainScreenKey is NestedNavKey.Settings,
-                inMultiplayer = mainScreenKey is NormalNavKey.Multiplayer,
+                modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
                 onHome = toMainScreen,
                 onVersions = {
                     screenBackStackModel.mainScreen.removeAndNavigateTo(
@@ -204,12 +232,6 @@ fun MainScreen(
                     screenBackStackModel.mainScreen.removeAndNavigateTo(
                         removes = screenBackStackModel.clearBeforeNavKeys,
                         screenKey = screenBackStackModel.settingsScreen
-                    )
-                },
-                onMultiplayer = {
-                    screenBackStackModel.mainScreen.removeAndNavigateTo(
-                        removes = screenBackStackModel.clearBeforeNavKeys,
-                        screenKey = NormalNavKey.Multiplayer
                     )
                 }
             )

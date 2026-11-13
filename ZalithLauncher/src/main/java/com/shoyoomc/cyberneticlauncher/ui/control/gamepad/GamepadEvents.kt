@@ -33,8 +33,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.ControlEventKeycode
-import com.shoyoomc.cyberneticlauncher.layer_controller.event.ClickEvent
+import com.movtery.inputmap.keycodes.ControlEventKeycode
+import com.movtery.layer_controller.event.ClickEvent
 import com.shoyoomc.cyberneticlauncher.game.keycodes.mapToControlEvent
 import com.shoyoomc.cyberneticlauncher.game.sdl.SdlBridge
 import com.shoyoomc.cyberneticlauncher.game.sdl.handleGamepadMotionEvent

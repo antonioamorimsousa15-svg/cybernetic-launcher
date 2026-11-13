@@ -20,7 +20,7 @@ package com.shoyoomc.cyberneticlauncher.ui.screens.content.home
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import com.shoyoomc.cyberneticlauncher.cardgrid.state.GridCard
+import com.movtery.cardgrid.state.GridCard
 import com.tencent.mmkv.MMKV
 
 /** 单张卡片的持久化数据 */

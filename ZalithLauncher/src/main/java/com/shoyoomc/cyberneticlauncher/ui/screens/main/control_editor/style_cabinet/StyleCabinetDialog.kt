@@ -60,7 +60,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.RendererStyleBox
+import com.movtery.layer_controller.layout.RendererStyleBox
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.control.CabinetStyleItem
 import com.shoyoomc.cyberneticlauncher.setting.enums.isLauncherInDarkTheme

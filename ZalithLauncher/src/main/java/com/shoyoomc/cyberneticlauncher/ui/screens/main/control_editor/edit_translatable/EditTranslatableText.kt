@@ -57,9 +57,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableLocalizedString
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableTranslatableString
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.toSimpleLangTag
+import com.movtery.layer_controller.observable.ObservableLocalizedString
+import com.movtery.layer_controller.observable.ObservableTranslatableString
+import com.movtery.layer_controller.utils.toSimpleLangTag
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.components.ImePanContainer
 import com.shoyoomc.cyberneticlauncher.ui.components.MarqueeText

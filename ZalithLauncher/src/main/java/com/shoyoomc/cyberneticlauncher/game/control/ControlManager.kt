@@ -19,13 +19,13 @@
 package com.shoyoomc.cyberneticlauncher.game.control
 
 import android.content.Context
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.ControlLayout
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.loadLayoutFromFile
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.loadLayoutFromFileUncheck
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.loadLayoutFromString
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayout
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.newRandomFileName
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.saveToFile
+import com.movtery.layer_controller.layout.ControlLayout
+import com.movtery.layer_controller.layout.loadLayoutFromFile
+import com.movtery.layer_controller.layout.loadLayoutFromFileUncheck
+import com.movtery.layer_controller.layout.loadLayoutFromString
+import com.movtery.layer_controller.observable.ObservableControlLayout
+import com.movtery.layer_controller.utils.newRandomFileName
+import com.movtery.layer_controller.utils.saveToFile
 import com.shoyoomc.cyberneticlauncher.context.copyAssetFile
 import com.shoyoomc.cyberneticlauncher.path.PathManager
 import com.shoyoomc.cyberneticlauncher.setting.AllSettings

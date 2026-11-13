@@ -31,12 +31,12 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import com.shoyoomc.cyberneticlauncher.petlib.ArmModel
-import com.shoyoomc.cyberneticlauncher.petlib.PetAnimation
-import com.shoyoomc.cyberneticlauncher.petlib.PetController
-import com.shoyoomc.cyberneticlauncher.petlib.PetGazeRouter
-import com.shoyoomc.cyberneticlauncher.petlib.PetPreview
-import com.shoyoomc.cyberneticlauncher.petlib.PetTapReaction
+import com.movtery.petlib.ArmModel
+import com.movtery.petlib.PetAnimation
+import com.movtery.petlib.PetController
+import com.movtery.petlib.PetGazeRouter
+import com.movtery.petlib.PetPreview
+import com.movtery.petlib.PetTapReaction
 
 /**
  * 设置皮肤，若皮肤数据传 null，则在 assets 中加载默认皮肤

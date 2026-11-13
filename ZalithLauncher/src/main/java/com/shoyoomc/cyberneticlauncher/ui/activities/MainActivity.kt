@@ -38,8 +38,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.shoyoomc.cyberneticlauncher.guide.GuideHost
-import com.shoyoomc.cyberneticlauncher.petlib.PetGazeRouter
+import com.movtery.guide.GuideHost
+import com.movtery.petlib.PetGazeRouter
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.context.COPY_LABEL_LINK
 import com.shoyoomc.cyberneticlauncher.coroutine.Task
@@ -224,7 +224,19 @@ class MainActivity : BaseAppCompatActivity() {
         //初始化通知管理（创建渠道）
         NotificationManager.initManager(this)
 
-        // CYBERNETIC: sem verificação de atualização nem lista de patrocinadores do ZL2
+        //检查更新
+        if (!isImporting && launcherUpgradeViewModel.operation == LauncherUpgradeOperation.None) {
+            lifecycleScope.launch {
+                launcherUpgradeViewModel.checkOnAppStart()
+            }
+        }
+
+        //拉取当月赞助者数据
+        lifecycleScope.launch {
+            sponsorsViewModel.loadOnStart(
+                showLastMonth = GuideProgress.isPlayed(GuideKeys.Main) && !isImporting
+            )
+        }
 
         //错误信息展示
         lifecycleScope.launch {
@@ -402,7 +414,7 @@ class MainActivity : BaseAppCompatActivity() {
                 }
 
                 //显示赞助支持的小弹窗
-                if (false && !isImporting && finishedGame.state >= 100 && showSponsorship.state) {
+                if (!isImporting && finishedGame.state >= 100 && showSponsorship.state) {
                     SimpleAlertDialog(
                         title = stringResource(R.string.about_sponsor),
                         text = stringResource(R.string.game_saponsorship_finished_game, finishedGame.state),

@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.LwjglGlfwKeycode;
+import com.movtery.inputmap.keycodes.LwjglGlfwKeycode;
 import com.shoyoomc.cyberneticlauncher.BuildKeys;
 import com.shoyoomc.cyberneticlauncher.bridge.CursorShape;
 import com.shoyoomc.cyberneticlauncher.bridge.LoggerBridge;

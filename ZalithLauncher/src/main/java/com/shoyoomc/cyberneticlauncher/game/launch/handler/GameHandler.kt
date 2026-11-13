@@ -27,7 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.LwjglGlfwKeycode
+import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import com.shoyoomc.cyberneticlauncher.bridge.ZLBridge
 import com.shoyoomc.cyberneticlauncher.game.control.ControlManager
 import com.shoyoomc.cyberneticlauncher.game.input.EfficientAndroidLWJGLKeycode

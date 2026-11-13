@@ -18,7 +18,7 @@
 
 package com.shoyoomc.cyberneticlauncher.game.control
 
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayout
+import com.movtery.layer_controller.observable.ObservableControlLayout
 import java.io.File
 
 /**

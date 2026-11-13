@@ -23,7 +23,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -73,11 +72,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shoyoomc.cyberneticlauncher.cardgrid.state.rememberCardGridState
-import com.shoyoomc.cyberneticlauncher.guide.GuideSide
-import com.shoyoomc.cyberneticlauncher.guide.guideNode
-import com.shoyoomc.cyberneticlauncher.petlib.PetAnimation
-import com.shoyoomc.cyberneticlauncher.petlib.PetTapReaction
+import com.movtery.cardgrid.state.rememberCardGridState
+import com.movtery.guide.GuideSide
+import com.movtery.guide.guideNode
+import com.movtery.petlib.PetAnimation
+import com.movtery.petlib.PetTapReaction
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.account.Account
 import com.shoyoomc.cyberneticlauncher.game.account.AccountsManager
@@ -93,6 +92,8 @@ import com.shoyoomc.cyberneticlauncher.ui.components.BackgroundCard
 import com.shoyoomc.cyberneticlauncher.ui.components.MarqueeText
 import com.shoyoomc.cyberneticlauncher.ui.components.PetModelView
 import com.shoyoomc.cyberneticlauncher.ui.components.ScalingActionButton
+import com.shoyoomc.cyberneticlauncher.ui.components.ScreenType
+import com.shoyoomc.cyberneticlauncher.ui.components.ScreenTypeLayout
 import com.shoyoomc.cyberneticlauncher.ui.components.animated
 import com.shoyoomc.cyberneticlauncher.ui.components.rememberAnimatedContext
 import com.shoyoomc.cyberneticlauncher.ui.guide.GuideKeys
@@ -153,13 +154,13 @@ fun LauncherScreen(
             if (!isVisible) dragState.onDragCancel()
         }
 
-        BoxWithConstraints(
+        ScreenTypeLayout(
             modifier = Modifier
                 .fillMaxSize()
                 .onGloballyPositioned { coordinates ->
                     dragState.parentOrigin = coordinates.positionInRoot()
                 }
-        ) {
+        ) { screenType ->
             val parentWidthPx = constraints.maxWidth.toFloat()
             dragState.parentWidthPx = parentWidthPx
             dragState.outerPaddingPx = with(LocalDensity.current) { ActionMenuOuterPadding.toPx() }
@@ -226,7 +227,7 @@ fun LauncherScreen(
                 }
             }
 
-            val isActionMenuTaller = maxHeight >= 600.dp
+            val isActionMenuTaller = screenType == ScreenType.Tablet
             CompositionLocalProvider(LocalActionMenuDrag provides dragState) {
                 Box(
                     modifier = Modifier

@@ -18,7 +18,7 @@
 
 package com.shoyoomc.cyberneticlauncher.setting.enums
 
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.LwjglGlfwKeycode
+import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import com.shoyoomc.cyberneticlauncher.R
 
 /**

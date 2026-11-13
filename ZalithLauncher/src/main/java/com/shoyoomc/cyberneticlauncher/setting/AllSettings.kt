@@ -23,7 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.materialkolor.PaletteStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.snap.SnapMode
+import com.movtery.layer_controller.utils.snap.SnapMode
 import com.shoyoomc.cyberneticlauncher.BuildKeys
 import com.shoyoomc.cyberneticlauncher.game.download.addon.platform.Platform
 import com.shoyoomc.cyberneticlauncher.game.path.GamePathManager
@@ -383,7 +383,8 @@ object AllSettings : SettingsRegistry() {
      */
     val launcherColorTheme = enumSetting(
         "launcherColorTheme",
-        ColorThemeType.SHOYO_RED
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) ColorThemeType.DYNAMIC
+        else ColorThemeType.EMBERMIRE
     )
 
     /**
@@ -399,7 +400,7 @@ object AllSettings : SettingsRegistry() {
     /**
      * 启动器UI深色主题
      */
-    val launcherDarkMode = enumSetting("launcherDarkMode", DarkMode.Enable)
+    val launcherDarkMode = enumSetting("launcherDarkMode", DarkMode.FollowSystem)
 
     /**
      * 启动器语言

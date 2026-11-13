@@ -26,27 +26,27 @@ import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.ButtonStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.HideLayerWhen
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.JoystickStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.cloneNew
-import com.shoyoomc.cyberneticlauncher.layer_controller.event.ClickEvent
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.ControlLayout
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.createNewLayer
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableButtonStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableClickEventsProvider
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayer
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayout
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickData
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableNormalData
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableTextData
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableTranslatableString
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableWidget
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.cloneJoystick
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.cloneNormal
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.cloneText
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.saveToFile
+import com.movtery.layer_controller.data.ButtonStyle
+import com.movtery.layer_controller.data.HideLayerWhen
+import com.movtery.layer_controller.data.JoystickStyle
+import com.movtery.layer_controller.data.cloneNew
+import com.movtery.layer_controller.event.ClickEvent
+import com.movtery.layer_controller.layout.ControlLayout
+import com.movtery.layer_controller.layout.createNewLayer
+import com.movtery.layer_controller.observable.ObservableButtonStyle
+import com.movtery.layer_controller.observable.ObservableClickEventsProvider
+import com.movtery.layer_controller.observable.ObservableControlLayer
+import com.movtery.layer_controller.observable.ObservableControlLayout
+import com.movtery.layer_controller.observable.ObservableJoystickData
+import com.movtery.layer_controller.observable.ObservableJoystickStyle
+import com.movtery.layer_controller.observable.ObservableNormalData
+import com.movtery.layer_controller.observable.ObservableTextData
+import com.movtery.layer_controller.observable.ObservableTranslatableString
+import com.movtery.layer_controller.observable.ObservableWidget
+import com.movtery.layer_controller.observable.cloneJoystick
+import com.movtery.layer_controller.observable.cloneNormal
+import com.movtery.layer_controller.observable.cloneText
+import com.movtery.layer_controller.utils.saveToFile
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.control.CabinetStyleItem
 import com.shoyoomc.cyberneticlauncher.game.control.StyleCabinetState
@@ -462,7 +462,7 @@ class EditorViewModel : ViewModel() {
      */
     fun createNewStyle(name: String) {
         observableLayout.addStyle(
-            com.shoyoomc.cyberneticlauncher.layer_controller.data.createNewButtonStyle(name)
+            com.movtery.layer_controller.data.createNewButtonStyle(name)
         )
     }
 
@@ -492,7 +492,7 @@ class EditorViewModel : ViewModel() {
      */
     fun createNewJoystickStyle(name: String) {
         observableLayout.addJoystickStyle(
-            com.shoyoomc.cyberneticlauncher.layer_controller.data.createNewJoystickStyle(name)
+            com.movtery.layer_controller.data.createNewJoystickStyle(name)
         )
     }
 

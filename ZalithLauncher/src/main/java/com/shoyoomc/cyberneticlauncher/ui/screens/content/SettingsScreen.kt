@@ -18,20 +18,7 @@
 
 package com.shoyoomc.cyberneticlauncher.ui.screens.content
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import com.shoyoomc.cyberneticlauncher.cyber.theme.ParaShape
-import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
-import com.shoyoomc.cyberneticlauncher.cyber.theme.tap
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -69,7 +56,6 @@ import com.shoyoomc.cyberneticlauncher.ui.screens.NormalNavKey
 import com.shoyoomc.cyberneticlauncher.ui.screens.TitledNavKey
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.elements.CategoryIcon
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.elements.CategoryItem
-import com.shoyoomc.cyberneticlauncher.ui.screens.content.elements.CyberTabRow
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.AboutInfoScreen
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.ControlManageScreen
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.ControlSettingsScreen
@@ -98,9 +84,9 @@ fun SettingsScreen(
         currentKey = backStackViewModel.mainScreen.currentKey
     ) { isVisible ->
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Row(modifier = Modifier.fillMaxSize()) {
             TabMenu(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxHeight(),
                 isVisible = isVisible,
                 settingsScreenKey = backStackViewModel.settingsScreen.currentKey,
                 navigateTo = { settingKey ->
@@ -117,7 +103,7 @@ fun SettingsScreen(
                 openLicenseScreen = openLicenseScreen,
                 eventViewModel = eventViewModel,
                 submitError = submitError,
-                modifier = Modifier.fillMaxWidth().weight(1f)
+                modifier = Modifier.fillMaxHeight()
             )
         }
     }
@@ -142,12 +128,50 @@ private fun TabMenu(
     navigateTo: (TitledNavKey) -> Unit
 ) {
     val ctx = rememberAnimatedContext(isVisible = isVisible)
-    CyberTabRow(
-        items = settingItems,
-        isSelected = { settingsScreenKey == it },
-        onSelect = navigateTo,
-        modifier = modifier.animated(ctx, from = AnimatedDirection.Top)
-    )
+
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = modifier
+            .fadeEdge(scrollState)
+            .width(IntrinsicSize.Min)
+            .padding(start = 8.dp)
+            .animated(ctx, from = AnimatedDirection.Left)
+            .verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(12.dp))
+        settingItems.forEach { item ->
+            if (item.division) {
+                HorizontalDivider(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .fillMaxWidth(0.4f)
+                        .alpha(0.4f),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            NavigationRailItem(
+                selected = settingsScreenKey == item.key,
+                onClick = {
+                    navigateTo(item.key)
+                },
+                icon = {
+                    item.icon()
+                },
+                label = {
+                    Text(
+                        modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE),
+                        text = stringResource(item.textRes),
+                        maxLines = 1,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
 }
 
 @Composable

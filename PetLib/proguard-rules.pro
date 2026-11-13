@@ -1,3 +1,3 @@
--keepclasseswithmembernames class com.shoyoomc.cyberneticlauncher.petlib.** {
+-keepclasseswithmembernames class com.movtery.petlib.** {
     native <methods>;
 }

@@ -40,10 +40,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.guide.GuideController
-import com.shoyoomc.cyberneticlauncher.guide.NextTip
-import com.shoyoomc.cyberneticlauncher.guide.NodeClickMode
-import com.shoyoomc.cyberneticlauncher.guide.rememberGuide
+import com.movtery.guide.GuideController
+import com.movtery.guide.NextTip
+import com.movtery.guide.NodeClickMode
+import com.movtery.guide.rememberGuide
 import com.shoyoomc.cyberneticlauncher.BuildKeys
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.utils.logging.Logger

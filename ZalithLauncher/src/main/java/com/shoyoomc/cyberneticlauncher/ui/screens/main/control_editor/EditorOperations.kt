@@ -18,13 +18,13 @@
 
 package com.shoyoomc.cyberneticlauncher.ui.screens.main.control_editor
 
-import com.shoyoomc.cyberneticlauncher.layer_controller.event.ClickEvent
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableButtonStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableClickEventsProvider
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayer
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableTranslatableString
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableWidget
+import com.movtery.layer_controller.event.ClickEvent
+import com.movtery.layer_controller.observable.ObservableButtonStyle
+import com.movtery.layer_controller.observable.ObservableClickEventsProvider
+import com.movtery.layer_controller.observable.ObservableControlLayer
+import com.movtery.layer_controller.observable.ObservableJoystickStyle
+import com.movtery.layer_controller.observable.ObservableTranslatableString
+import com.movtery.layer_controller.observable.ObservableWidget
 import com.shoyoomc.cyberneticlauncher.game.control.CabinetStyleItem
 import com.shoyoomc.cyberneticlauncher.ui.screens.main.control_editor.edit_widget.SelectedWidgetData
 import com.shoyoomc.cyberneticlauncher.ui.screens.main.control_editor.style_cabinet.OpenCabinetSource

@@ -23,7 +23,7 @@ import static org.lwjgl.glfw.CallbackBridge.sendKeyPress;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.LwjglGlfwKeycode;
+import com.movtery.inputmap.keycodes.LwjglGlfwKeycode;
 
 import org.lwjgl.glfw.CallbackBridge;
 

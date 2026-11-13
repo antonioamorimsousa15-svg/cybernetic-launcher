@@ -53,7 +53,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayer
+import com.movtery.layer_controller.observable.ObservableControlLayer
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.components.MarqueeText
 import com.shoyoomc.cyberneticlauncher.ui.components.rememberDialogMaxHeight

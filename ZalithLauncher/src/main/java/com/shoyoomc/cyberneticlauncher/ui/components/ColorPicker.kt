@@ -53,10 +53,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.shoyoomc.cyberneticlauncher.colorpicker.ColorPickerController
-import com.shoyoomc.cyberneticlauncher.colorpicker.components.AlphaBarPicker
-import com.shoyoomc.cyberneticlauncher.colorpicker.components.ColorSquarePicker
-import com.shoyoomc.cyberneticlauncher.colorpicker.components.HueBarPicker
+import com.movtery.colorpicker.ColorPickerController
+import com.movtery.colorpicker.components.AlphaBarPicker
+import com.movtery.colorpicker.components.ColorSquarePicker
+import com.movtery.colorpicker.components.HueBarPicker
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.theme.cardColor
 import com.shoyoomc.cyberneticlauncher.ui.theme.onCardColor

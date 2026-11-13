@@ -77,7 +77,7 @@ import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.layouts.CardP
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.layouts.SettingsCard
 import com.shoyoomc.cyberneticlauncher.ui.theme.itemColor
 import com.shoyoomc.cyberneticlauncher.ui.theme.onItemColor
-import com.shoyoomc.cyberneticlauncher.petlib.R as PetLibR
+import com.movtery.petlib.R as PetLibR
 
 @Composable
 fun AboutInfoScreen(
@@ -109,8 +109,32 @@ fun AboutInfoScreen(
                         ButtonIconItem(
                             icon = painterResource(R.drawable.img_launcher),
                             title = BuildKeys.LAUNCHER_NAME,
-                            text = stringResource(R.string.about_launcher_version, BuildConfig.VERSION_NAME) + " · shoyoo.mc",
-                            button = {}
+                            text = stringResource(R.string.about_launcher_version, BuildConfig.VERSION_NAME),
+                            button = {
+                                Button(
+                                    onClick = checkUpdate
+                                ) {
+                                    Text(text = stringResource(R.string.upgrade_title))
+                                }
+                                Button(
+                                    onClick = { openLink(URL_PROJECT) }
+                                ) {
+                                    Text(text = stringResource(R.string.about_launcher_project_link))
+                                }
+                            }
+                        )
+
+                        ButtonIconItem(
+                            icon = painterResource(R.drawable.img_avatar_movtery),
+                            title = stringResource(R.string.about_launcher_author_movtery_title),
+                            text = stringResource(R.string.about_launcher_author_movtery_text, launcherName),
+                            button = {
+                                Button(
+                                    onClick = { openLink(URL_SUPPORT) }
+                                ) {
+                                    Text(text = stringResource(R.string.about_sponsor))
+                                }
+                            }
                         )
                     }
                 }
@@ -124,6 +148,31 @@ fun AboutInfoScreen(
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         val launcherName = remember { launcherName() }
 
+                        ButtonIconItem(
+                            icon = painterResource(R.drawable.img_sponsor),
+                            title = stringResource(R.string.about_sponsors_title),
+                            text = stringResource(R.string.about_sponsors_summary, launcherName),
+                            button = {
+                                Button(
+                                    onClick = onViewSponsors
+                                ) {
+                                    Text(text = stringResource(R.string.generic_view))
+                                }
+                            }
+                        )
+
+                        ButtonIconItem(
+                            icon = painterResource(R.drawable.img_avatar_bangbang93),
+                            title = "bangbang93",
+                            text = stringResource(R.string.about_acknowledgements_bangbang93_text, BuildKeys.LAUNCHER_SHORT_NAME),
+                            button = {
+                                Button(
+                                    onClick = { openLink("https://ifdian.net/a/bangbang93") }
+                                ) {
+                                    Text(text = stringResource(R.string.about_sponsor))
+                                }
+                            }
+                        )
                         LinkIconItem(
                             icon = painterResource(R.drawable.img_launcher_fcl),
                             title = "Fold Craft Launcher",
@@ -144,6 +193,18 @@ fun AboutInfoScreen(
                             text = stringResource(R.string.about_acknowledgements_mcmod_text, BuildKeys.LAUNCHER_SHORT_NAME),
                             openLink = { openLink(URL_MCMOD) }
                         )
+                        ButtonIconItem(
+                            icon = painterResource(R.drawable.img_avatar_mcim),
+                            title = "mcmod-info-mirror",
+                            text = stringResource(R.string.about_acknowledgements_mcim_text, BuildKeys.LAUNCHER_SHORT_NAME),
+                            button = {
+                                Button(
+                                    onClick = { openLink("https://www.mcimirror.top/sponsor") }
+                                ) {
+                                    Text(text = stringResource(R.string.about_sponsor))
+                                }
+                            }
+                        )
                         LinkIconItem(
                             icon = painterResource(R.drawable.img_platform_modrinth),
                             title = "Modrinth App",
@@ -163,6 +224,19 @@ fun AboutInfoScreen(
                             text = stringResource(R.string.about_acknowledgements_pojav_text, BuildKeys.LAUNCHER_SHORT_NAME),
                             openLicense = { openLicense(R.raw.lgpl_3_license) },
                             openLink = { openLink("https://github.com/PojavLauncherTeam/PojavLauncher") }
+                        )
+                        LinkIconItem(
+                            icon = painterResource(R.drawable.ic_github),
+                            title = stringResource(R.string.about_acknowledgements_github_community),
+                            text = stringResource(R.string.about_acknowledgements_github_community_text),
+                            openLink = { openLink(URL_COMMUNITY) },
+                            useImage = false
+                        )
+                        LinkIconItem(
+                            icon = painterResource(R.drawable.img_platform_weblate),
+                            title = stringResource(R.string.about_acknowledgements_weblate_community),
+                            text = stringResource(R.string.about_acknowledgements_weblate_community_text),
+                            openLink = { openLink(URL_WEBLATE) }
                         )
                     }
                 }

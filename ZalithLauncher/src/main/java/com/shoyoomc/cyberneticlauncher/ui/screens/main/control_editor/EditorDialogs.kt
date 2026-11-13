@@ -31,10 +31,10 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shoyoomc.cyberneticlauncher.layer_controller.event.ClickEvent
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableButtonStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayer
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickStyle
+import com.movtery.layer_controller.event.ClickEvent
+import com.movtery.layer_controller.observable.ObservableButtonStyle
+import com.movtery.layer_controller.observable.ObservableControlLayer
+import com.movtery.layer_controller.observable.ObservableJoystickStyle
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.control.CabinetStyleItem
 import com.shoyoomc.cyberneticlauncher.ui.components.ProgressDialog

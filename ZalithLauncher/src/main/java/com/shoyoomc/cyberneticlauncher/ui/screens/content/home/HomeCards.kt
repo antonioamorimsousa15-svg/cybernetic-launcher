@@ -32,8 +32,8 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardLimits
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardType
+import com.movtery.cardgrid.model.CardLimits
+import com.movtery.cardgrid.model.CardType
 import com.shoyoomc.cyberneticlauncher.BuildConfig
 import com.shoyoomc.cyberneticlauncher.BuildKeys
 import com.shoyoomc.cyberneticlauncher.R

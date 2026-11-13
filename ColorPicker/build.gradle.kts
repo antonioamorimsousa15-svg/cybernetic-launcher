@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shoyoomc.cyberneticlauncher.colorpicker"
+    namespace = "com.movtery.colorpicker"
     compileSdk = 37
 
     defaultConfig {

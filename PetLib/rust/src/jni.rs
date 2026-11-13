@@ -1,4 +1,4 @@
-//! Android JNI 桥，`com.shoyoomc.cyberneticlauncher.petlib.PetLibNative` 的原生实现。
+//! Android JNI 桥，`com.movtery.petlib.PetLibNative` 的原生实现。
 
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
@@ -156,7 +156,7 @@ fn error_or_null<'local>(env: &mut JNIEnv<'local>, error: Option<String>) -> JSt
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeCreate<'local>(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeCreate<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass,
     skin: JByteArray,
@@ -178,7 +178,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeDestroy(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeDestroy(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -192,7 +192,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetSkin<'local>(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetSkin<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass,
     ptr: jlong,
@@ -213,7 +213,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetCape<'local>(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetCape<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass,
     ptr: jlong,
@@ -231,7 +231,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetLighting(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetLighting(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -254,7 +254,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetSuperSample(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetSuperSample(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -269,7 +269,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetOuterLayer(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetOuterLayer(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -284,7 +284,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetTau(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetTau(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -302,7 +302,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetHeadRange(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetHeadRange(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -318,7 +318,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetSquashDepth(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetSquashDepth(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -333,7 +333,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetGaze(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetGaze(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -350,7 +350,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSetYaw(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSetYaw(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -365,7 +365,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeGetYaw(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeGetYaw(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -377,7 +377,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativePlayAnimation(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativePlayAnimation(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -394,7 +394,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeStopAnimation(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeStopAnimation(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -408,7 +408,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeSquashTap(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeSquashTap(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -423,7 +423,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativePlaySwing(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativePlaySwing(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -438,7 +438,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativePlayInteract(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativePlayInteract(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,
@@ -452,7 +452,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeRender<'local>(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeRender<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass,
     ptr: jlong,
@@ -486,7 +486,7 @@ pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_
 }
 
 #[no_mangle]
-pub extern "system" fn Java_com_shoyoomc_cyberneticlauncher_petlib_PetLibNative_nativeHitTest(
+pub extern "system" fn Java_com_movtery_petlib_PetLibNative_nativeHitTest(
     _env: JNIEnv,
     _class: JClass,
     ptr: jlong,

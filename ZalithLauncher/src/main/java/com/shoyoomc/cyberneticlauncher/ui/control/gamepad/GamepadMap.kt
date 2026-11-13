@@ -21,8 +21,8 @@ package com.shoyoomc.cyberneticlauncher.ui.control.gamepad
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.ControlEventKeyName
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.ControlEventKeycode
+import com.movtery.inputmap.keycodes.ControlEventKeyName
+import com.movtery.inputmap.keycodes.ControlEventKeycode
 import com.shoyoomc.cyberneticlauncher.R
 
 /**

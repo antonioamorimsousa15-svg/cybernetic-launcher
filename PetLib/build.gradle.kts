@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shoyoomc.cyberneticlauncher.petlib"
+    namespace = "com.movtery.petlib"
     compileSdk = 37
 
     defaultConfig {

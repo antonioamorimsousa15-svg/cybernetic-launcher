@@ -19,30 +19,5 @@
 package com.shoyoomc.cyberneticlauncher.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 
-private val base = Typography()
-private fun TextStyle.sans(w: FontWeight? = null, ls: Float = 0f) =
-    copy(fontFamily = FontFamily.SansSerif, fontWeight = w ?: fontWeight, letterSpacing = if (ls != 0f) ls.sp else letterSpacing)
-
-/** CYBERNETIC: tipografia técnica — sem serifa, títulos firmes, rótulos com espaçamento. */
-val AppTypography = Typography(
-    displayLarge = base.displayLarge.sans(FontWeight.Black),
-    displayMedium = base.displayMedium.sans(FontWeight.Black),
-    displaySmall = base.displaySmall.sans(FontWeight.Black),
-    headlineLarge = base.headlineLarge.sans(FontWeight.Bold),
-    headlineMedium = base.headlineMedium.sans(FontWeight.Bold),
-    headlineSmall = base.headlineSmall.sans(FontWeight.Bold),
-    titleLarge = base.titleLarge.sans(FontWeight.Bold),
-    titleMedium = base.titleMedium.sans(FontWeight.Bold),
-    titleSmall = base.titleSmall.sans(FontWeight.Bold),
-    bodyLarge = base.bodyLarge.sans(),
-    bodyMedium = base.bodyMedium.sans(),
-    bodySmall = base.bodySmall.sans(),
-    labelLarge = base.labelLarge.sans(FontWeight.SemiBold, 0.8f),
-    labelMedium = base.labelMedium.sans(FontWeight.SemiBold, 0.8f),
-    labelSmall = base.labelSmall.sans(FontWeight.Medium, 0.6f),
-)
+val AppTypography = Typography()

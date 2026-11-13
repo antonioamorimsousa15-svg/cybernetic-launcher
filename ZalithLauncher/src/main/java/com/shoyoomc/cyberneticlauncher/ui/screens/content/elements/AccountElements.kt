@@ -110,8 +110,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.createBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shoyoomc.cyberneticlauncher.petlib.ArmModel
-import com.shoyoomc.cyberneticlauncher.petlib.PetAnimation
+import com.movtery.petlib.ArmModel
+import com.movtery.petlib.PetAnimation
 import com.shoyoomc.cyberneticlauncher.BuildKeys
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.account.Account
@@ -1509,7 +1509,6 @@ fun ChangeSkinDialog(
             Surface(
                 modifier = Modifier
                     .padding(all = 6.dp)
-                    .heightIn(min = (maxHeight * 0.85f).coerceAtMost(rememberDialogMaxHeight()))
                     .heightIn(max = (maxHeight - 12.dp).coerceAtMost(rememberDialogMaxHeight())),
                 shape = MaterialTheme.shapes.extraLarge,
                 color = cardColor(false),

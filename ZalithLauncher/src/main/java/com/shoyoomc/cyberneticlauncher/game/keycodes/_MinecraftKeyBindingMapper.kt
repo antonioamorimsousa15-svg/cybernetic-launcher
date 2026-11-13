@@ -18,8 +18,8 @@
 
 package com.shoyoomc.cyberneticlauncher.game.keycodes
 
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.Lwjgl2Keycode
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.MinecraftKeyBindingMapper
+import com.movtery.inputmap.keycodes.Lwjgl2Keycode
+import com.movtery.inputmap.keycodes.MinecraftKeyBindingMapper
 import com.shoyoomc.cyberneticlauncher.game.launch.MCOptions
 
 /**

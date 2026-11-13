@@ -18,8 +18,8 @@
 
 package com.shoyoomc.cyberneticlauncher.ui.screens.main.control_editor.edit_widget
 
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayer
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableWidget
+import com.movtery.layer_controller.observable.ObservableControlLayer
+import com.movtery.layer_controller.observable.ObservableWidget
 
 /**
  * 将在组件编辑对话框中编辑的组件

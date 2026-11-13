@@ -66,8 +66,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.colorpicker.components.TransparentChecker
-import com.shoyoomc.cyberneticlauncher.colorpicker.rememberColorPickerController
+import com.movtery.colorpicker.components.TransparentChecker
+import com.movtery.colorpicker.rememberColorPickerController
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.components.ColorPickerDialog
 import com.shoyoomc.cyberneticlauncher.ui.components.DefaultSwitch

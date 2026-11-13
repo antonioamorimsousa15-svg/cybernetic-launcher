@@ -37,8 +37,8 @@ import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.LayoutDirection
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickStyleConfig
+import com.movtery.layer_controller.observable.ObservableJoystickStyle
+import com.movtery.layer_controller.observable.ObservableJoystickStyleConfig
 
 private fun Color.applyAlpha(multiplier: Float): Color {
     val a = (this.alpha * multiplier).coerceIn(0f, 1f)

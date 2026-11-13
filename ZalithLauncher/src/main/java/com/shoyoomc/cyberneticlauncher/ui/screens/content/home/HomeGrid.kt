@@ -64,11 +64,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardRect
-import com.shoyoomc.cyberneticlauncher.cardgrid.state.CardGridState
-import com.shoyoomc.cyberneticlauncher.cardgrid.state.CardSeed
-import com.shoyoomc.cyberneticlauncher.cardgrid.ui.CardGrid
-import com.shoyoomc.cyberneticlauncher.cardgrid.ui.CardGridAutoScroll
+import com.movtery.cardgrid.model.CardRect
+import com.movtery.cardgrid.state.CardGridState
+import com.movtery.cardgrid.state.CardSeed
+import com.movtery.cardgrid.ui.CardGrid
+import com.movtery.cardgrid.ui.CardGridAutoScroll
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.setting.AllSettings
 import com.shoyoomc.cyberneticlauncher.ui.screens.content.elements.backgroundGlass

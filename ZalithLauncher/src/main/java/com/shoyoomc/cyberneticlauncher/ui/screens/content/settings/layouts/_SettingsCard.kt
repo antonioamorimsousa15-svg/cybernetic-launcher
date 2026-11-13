@@ -19,18 +19,12 @@
 package com.shoyoomc.cyberneticlauncher.ui.screens.content.settings.layouts
 
 import androidx.compose.foundation.layout.Arrangement
-import com.shoyoomc.cyberneticlauncher.cyber.theme.techFrame
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +36,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.cyber.theme.ParaShape
 import com.shoyoomc.cyberneticlauncher.ui.components.BackgroundCard
 import com.shoyoomc.cyberneticlauncher.ui.components.TitleAndSummary
 
@@ -164,7 +157,48 @@ fun rememberSettingsCardShape(
     outerShape: Dp = 28.dp,
     innerShape: Dp = 4.dp
 ): Shape {
-    return remember { ParaShape(12.dp) }
+    return remember(position, outerShape, innerShape) {
+        when (position) {
+            CardPosition.Top -> RoundedCornerShape(
+                topStart = outerShape,
+                topEnd = outerShape,
+                bottomStart = innerShape,
+                bottomEnd = innerShape
+            )
+            CardPosition.TopStart -> RoundedCornerShape(
+                topStart = outerShape,
+                topEnd = innerShape,
+                bottomStart = innerShape,
+                bottomEnd = innerShape
+            )
+            CardPosition.TopEnd -> RoundedCornerShape(
+                topStart = innerShape,
+                topEnd = outerShape,
+                bottomStart = innerShape,
+                bottomEnd = innerShape
+            )
+            CardPosition.Middle -> RoundedCornerShape(innerShape)
+            CardPosition.Bottom -> RoundedCornerShape(
+                topStart = innerShape,
+                topEnd = innerShape,
+                bottomStart = outerShape,
+                bottomEnd = outerShape
+            )
+            CardPosition.BottomStart -> RoundedCornerShape(
+                topStart = innerShape,
+                topEnd = innerShape,
+                bottomStart = outerShape,
+                bottomEnd = innerShape
+            )
+            CardPosition.BottomEnd -> RoundedCornerShape(
+                topStart = innerShape,
+                topEnd = innerShape,
+                bottomStart = innerShape,
+                bottomEnd = outerShape
+            )
+            CardPosition.Single -> RoundedCornerShape(outerShape)
+        }
+    }
 }
 
 @Composable
@@ -177,11 +211,10 @@ fun SettingsCard(
 ) {
     val shape = rememberSettingsCardShape(position, outerShape, innerShape)
 
-    SettingsBackground(
+    BackgroundCard(
         modifier = modifier,
         shape = shape,
-        position = position,
-        content = { Column(Modifier.padding(horizontal = 12.dp), content = content) }
+        content = content
     )
 }
 
@@ -197,13 +230,12 @@ fun SettingsCard(
 ) {
     val shape = rememberSettingsCardShape(position, outerShape, innerShape)
 
-    SettingsBackground(
+    BackgroundCard(
         modifier = modifier,
         shape = shape,
-        position = position,
         onClick = onClick,
         enabled = enabled,
-        content = { Column(Modifier.padding(horizontal = 12.dp), content = content) }
+        content = content
     )
 }
 
@@ -217,17 +249,16 @@ fun SettingsCard(
     summaryStyle: TextStyle = MaterialTheme.typography.labelSmall,
     outerShape: Dp = 28.dp,
     innerShape: Dp = 4.dp,
-    innerPadding: PaddingValues = PaddingValues(start = 28.dp, end = 28.dp, top = 16.dp, bottom = 16.dp),
+    innerPadding: PaddingValues = PaddingValues(all = 16.dp),
     onClick: () -> Unit,
     trailingIcon: (@Composable RowScope.() -> Unit)? = null,
     enabled: Boolean = true
 ) {
     val shape = rememberSettingsCardShape(position, outerShape, innerShape)
 
-    SettingsBackground(
+    BackgroundCard(
         modifier = modifier,
         shape = shape,
-        position = position,
         onClick = onClick,
         enabled = enabled
     ) {
@@ -255,55 +286,13 @@ fun SettingsCard(
 }
 
 @Composable
-private fun settingsCardBorder() =
-    androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.40f))
-
-/** Dentro de um [SettingsCardColumn] os cartões viram linhas de um único painel de vidro, separadas por fios. */
-val LocalSettingsGroup = androidx.compose.runtime.compositionLocalOf { false }
-
-@Composable
-private fun SettingsBackground(
-    modifier: Modifier,
-    shape: Shape,
-    position: CardPosition,
-    onClick: (() -> Unit)? = null,
-    enabled: Boolean = true,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    if (LocalSettingsGroup.current) {
-        Column(modifier) {
-            if (position != CardPosition.Top) {
-                androidx.compose.foundation.layout.Box(
-                    Modifier.fillMaxWidth().padding(horizontal = 14.dp).height(1.dp)
-                        .background(com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.PanelBorder.copy(alpha = 0.35f))
-                )
-            }
-            Column(
-                if (onClick != null) Modifier.clickable(enabled = enabled, onClick = onClick) else Modifier,
-                content = content
-            )
-        }
-    } else if (onClick != null) {
-        BackgroundCard(modifier = modifier, shape = shape, border = settingsCardBorder(), onClick = onClick, enabled = enabled, content = content)
-    } else {
-        BackgroundCard(modifier = modifier, shape = shape, border = settingsCardBorder(), content = content)
-    }
-}
-
-@Composable
 fun SettingsCardColumn(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val panel = remember { ParaShape(24.dp) }
-    androidx.compose.runtime.CompositionLocalProvider(LocalSettingsGroup provides true) {
-        Column(
-            modifier = modifier
-                .clip(panel)
-                .background(com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.Glass)
-                .border(1.dp, com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors.PanelBorder, panel)
-                .techFrame(),
-            content = content
-        )
-    }
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        content = content
+    )
 }

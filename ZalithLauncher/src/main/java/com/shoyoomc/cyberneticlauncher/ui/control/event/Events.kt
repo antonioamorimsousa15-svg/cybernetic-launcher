@@ -18,7 +18,7 @@
 
 package com.shoyoomc.cyberneticlauncher.ui.control.event
 
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.ControlEventKeycode
+import com.movtery.inputmap.keycodes.ControlEventKeycode
 import org.lwjgl.glfw.CallbackBridge
 
 /**

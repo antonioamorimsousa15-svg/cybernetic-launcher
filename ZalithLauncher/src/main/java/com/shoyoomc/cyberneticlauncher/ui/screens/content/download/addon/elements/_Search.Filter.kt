@@ -72,7 +72,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.animateShapeAsState
+import com.movtery.layer_controller.utils.animateShapeAsState
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.download.addon.platform.Platform
 import com.shoyoomc.cyberneticlauncher.game.download.addon.platform.PlatformDisplayLabel

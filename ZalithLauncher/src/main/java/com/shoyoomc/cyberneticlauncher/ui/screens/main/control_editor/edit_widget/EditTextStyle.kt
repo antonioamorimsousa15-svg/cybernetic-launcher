@@ -33,11 +33,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.TextAlignment
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableNormalData
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableTextData
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableTranslatableString
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableWidget
+import com.movtery.layer_controller.data.TextAlignment
+import com.movtery.layer_controller.observable.ObservableNormalData
+import com.movtery.layer_controller.observable.ObservableTextData
+import com.movtery.layer_controller.observable.ObservableTranslatableString
+import com.movtery.layer_controller.observable.ObservableWidget
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.base.BaseScreen
 import com.shoyoomc.cyberneticlauncher.ui.screens.TitledNavKey

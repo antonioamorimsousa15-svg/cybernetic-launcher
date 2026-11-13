@@ -12,10 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.JOYSTICK_DEAD_ZONE_RANGE
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.JOYSTICK_LOCK_THRESHOLD_RANGE
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.JoystickTriggerMode
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickData
+import com.movtery.layer_controller.data.JOYSTICK_DEAD_ZONE_RANGE
+import com.movtery.layer_controller.data.JOYSTICK_LOCK_THRESHOLD_RANGE
+import com.movtery.layer_controller.data.JoystickTriggerMode
+import com.movtery.layer_controller.observable.ObservableJoystickData
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.base.BaseScreen
 import com.shoyoomc.cyberneticlauncher.ui.components.verticalScrollWithBar

@@ -27,9 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.unit.IntSize
-import com.shoyoomc.cyberneticlauncher.layer_controller.ControlBoxLayout
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.HideLayerWhen
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayout
+import com.movtery.layer_controller.ControlBoxLayout
+import com.movtery.layer_controller.data.HideLayerWhen
+import com.movtery.layer_controller.observable.ObservableControlLayout
 import com.shoyoomc.cyberneticlauncher.setting.enums.isLauncherInDarkTheme
 import com.shoyoomc.cyberneticlauncher.ui.components.rememberBoxSize
 import com.shoyoomc.cyberneticlauncher.ui.control.mouse.SwitchableMouseLayout

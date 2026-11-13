@@ -87,9 +87,9 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardSize
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardSizeClass
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardState
+import com.movtery.cardgrid.model.CardSize
+import com.movtery.cardgrid.model.CardSizeClass
+import com.movtery.cardgrid.model.CardState
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.context.COPY_LABEL_SERVER_IP
 import com.shoyoomc.cyberneticlauncher.game.path.getGameHome

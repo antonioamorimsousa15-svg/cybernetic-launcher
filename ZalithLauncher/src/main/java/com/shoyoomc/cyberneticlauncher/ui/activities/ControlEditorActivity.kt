@@ -28,8 +28,8 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.ControlLayout
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.loadLayoutFromFile
+import com.movtery.layer_controller.layout.ControlLayout
+import com.movtery.layer_controller.layout.loadLayoutFromFile
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.setting.AllSettings
 import com.shoyoomc.cyberneticlauncher.ui.base.BaseAppCompatActivity

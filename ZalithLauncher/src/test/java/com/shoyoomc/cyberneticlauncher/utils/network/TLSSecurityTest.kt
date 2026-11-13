@@ -31,7 +31,7 @@ import java.security.cert.X509Certificate
 import javax.net.ssl.X509TrustManager
 
 class TLSSecurityTest {
-    private fun resource(name: String) = "/com/shoyoomc/cyberneticlauncher/utils/network/$name"
+    private fun resource(name: String) = "/com.shoyoomc.cyberneticlauncher/utils/network/$name"
 
     private fun loadCertificates(resource: String): List<X509Certificate> {
         val factory = CertificateFactory.getInstance("X.509")

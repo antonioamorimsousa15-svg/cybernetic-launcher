@@ -20,7 +20,7 @@ package com.shoyoomc.cyberneticlauncher.game.input
 
 import android.view.KeyEvent
 import android.view.MotionEvent
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.LwjglGlfwKeycode
+import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import org.lwjgl.glfw.CallbackBridge
 
 object LWJGLCharSender : CharacterSenderStrategy {

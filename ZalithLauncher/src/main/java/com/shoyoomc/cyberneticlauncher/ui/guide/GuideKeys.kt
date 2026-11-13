@@ -18,7 +18,7 @@
 
 package com.shoyoomc.cyberneticlauncher.ui.guide
 
-import com.shoyoomc.cyberneticlauncher.guide.GuideKey
+import com.movtery.guide.GuideKey
 
 /** 启动器各类引导 */
 sealed interface GuideKeys : GuideKey {

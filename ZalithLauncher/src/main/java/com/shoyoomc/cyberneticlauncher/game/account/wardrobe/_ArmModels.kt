@@ -1,6 +1,6 @@
 package com.shoyoomc.cyberneticlauncher.game.account.wardrobe
 
-import com.shoyoomc.cyberneticlauncher.petlib.ArmModel
+import com.movtery.petlib.ArmModel
 
 /**
  * 皮肤模型类型到 PetLib 臂型的映射

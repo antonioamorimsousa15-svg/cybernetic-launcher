@@ -20,7 +20,6 @@ package com.shoyoomc.cyberneticlauncher.ui.screens.main
 
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
-import com.shoyoomc.cyberneticlauncher.cyber.theme.auroraBackground
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -79,19 +78,6 @@ import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.coroutine.TaskSystem
 import com.shoyoomc.cyberneticlauncher.game.version.installed.Version
 import com.shoyoomc.cyberneticlauncher.game.version.installed.VersionsManager
-import com.shoyoomc.cyberneticlauncher.game.account.AccountsManager
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.ui.platform.LocalContext
-import com.shoyoomc.cyberneticlauncher.BuildConfig
-import com.shoyoomc.cyberneticlauncher.ui.toAndroidString
-import com.shoyoomc.cyberneticlauncher.cyber.theme.GlassPill
-import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoColors
-import com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoTopBar
-import com.shoyoomc.cyberneticlauncher.game.account.isAuthServerAccount
-import com.shoyoomc.cyberneticlauncher.game.account.isMicrosoftAccount
-import com.shoyoomc.cyberneticlauncher.cyber.screens.CyberHomeScreen
 import com.shoyoomc.cyberneticlauncher.path.PathManager
 import com.shoyoomc.cyberneticlauncher.setting.AllSettings
 import com.shoyoomc.cyberneticlauncher.ui.AndroidStringText
@@ -172,10 +158,6 @@ fun MainScreen(
     val mainScreenKey = screenBackStackModel.mainScreen.currentKey
     val inLauncherScreen = mainScreenKey == null || mainScreenKey is NormalNavKey.LauncherMain
 
-    // SHOYO: menu lateral que esconde ao escolher uma seção (tela cheia)
-    var sidebarOpen by remember { mutableStateOf(true) }
-    LaunchedEffect(mainScreenKey) { sidebarOpen = inLauncherScreen }
-
     val isBackgroundValid = LocalBackgroundViewModel.current?.isValid == true
     val launcherBackgroundOpacity = AllSettings.launcherBackgroundOpacity.state.toFloat() / 100f
 
@@ -191,112 +173,51 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .auroraBackground()
         ) {
-            val ctx = LocalContext.current
-            val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-            val parentTitle = mainScreenKey?.title
-            val childTitle = (mainScreenKey as? BackStackNavKey<*>)?.currentKey?.title
-            val breadcrumb = when {
-                parentTitle == null -> "Início"
-                childTitle != null -> parentTitle.toAndroidString(ctx) + " › " + childTitle.toAndroidString(ctx)
-                else -> parentTitle.toAndroidString(ctx)
-            }
-            val topAccount by AccountsManager.currentAccountFlow.collectAsStateWithLifecycle()
-
-            ShoyoTopBar(
-                appName = "Cybernetic",
-                version = "v" + BuildConfig.VERSION_NAME,
-                breadcrumb = breadcrumb,
-                userName = topAccount?.username ?: "Adicionar Conta",
-                logo = painterResource(R.drawable.ic_launcher_fg_img),
-                backIcon = Icons.AutoMirrored.Filled.ArrowBack,
-                filesIcon = Icons.Filled.Folder,
-                onBack = {
-                    if (inLauncherScreen) {
-                        // menu lateral fixo: sem esconder/mostrar
-                    } else {
-                        backDispatcher?.onBackPressed() ?: run {
-                            screenBackStackModel.mainScreen.backStack.removeFirstOrNull()
-                        }
-                    }
-                },
-                onFiles = {
-                    eventViewModel.sendEvent(
-                        EventViewModel.Event.OpenFileManager(
-                            rootPath = PathManager.DIR_FILES_EXTERNAL.absolutePath
-                        )
-                    )
-                },
-                onUser = {
-                    screenBackStackModel.mainScreen.removeAndNavigateTo(
-                        removes = screenBackStackModel.clearBeforeNavKeys,
-                        screenKey = NormalNavKey.AccountManager()
-                    )
-                },
-                onMenu = { },
-                extra = {
-                    GlassPill(onClick = { changeTasksExpandedState() }) {
-                        Text(
-                            if (taskRunning) "Tarefas •" else "Tarefas",
-                            color = ShoyoColors.TextPrimary,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
-            )
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-              androidx.compose.animation.AnimatedVisibility(
-                visible = true,
-                enter = androidx.compose.animation.EnterTransition.None,
-                exit = androidx.compose.animation.ExitTransition.None
-              ) {
-                ShoyoSidebar(
-                    modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
-                    inHome = inLauncherScreen,
-                    inVersions = mainScreenKey is NormalNavKey.VersionsManager,
-                    inDownload = mainScreenKey is NestedNavKey.Download,
-                    inAccounts = mainScreenKey is NormalNavKey.AccountManager,
-                    inMultiplayer = mainScreenKey is NormalNavKey.Multiplayer,
-                    inSettings = mainScreenKey is NestedNavKey.Settings,
-                    onHome = toMainScreen,
-                    onVersions = {
-                        screenBackStackModel.mainScreen.removeAndNavigateTo(
-                            removes = screenBackStackModel.clearBeforeNavKeys,
-                            screenKey = NormalNavKey.VersionsManager
-                        )
-                    },
-                    onDownload = { screenBackStackModel.navigateToDownload() },
-                    onAccounts = {
-                        screenBackStackModel.mainScreen.removeAndNavigateTo(
-                            removes = screenBackStackModel.clearBeforeNavKeys,
-                            screenKey = NormalNavKey.AccountManager()
-                        )
-                    },
-                    onMultiplayer = {
-                        screenBackStackModel.mainScreen.removeAndNavigateTo(
-                            removes = screenBackStackModel.clearBeforeNavKeys,
-                            screenKey = NormalNavKey.Multiplayer
-                        )
-                    },
-                    onSettings = {
-                        screenBackStackModel.mainScreen.removeAndNavigateTo(
-                            removes = screenBackStackModel.clearBeforeNavKeys,
-                            screenKey = screenBackStackModel.settingsScreen
-                        )
-                    }
-                )
-              }
-              Box(
+            CyberLeftColumn(
+                inHome = inLauncherScreen,
+                inVersions = mainScreenKey is NormalNavKey.VersionsManager,
+                inDownload = mainScreenKey is NestedNavKey.Download,
+                inAccounts = mainScreenKey is NormalNavKey.AccountManager,
+                inSettings = mainScreenKey is NestedNavKey.Settings,
+                inMultiplayer = mainScreenKey is NormalNavKey.Multiplayer,
+                onHome = toMainScreen,
+                onVersions = {
+                    screenBackStackModel.mainScreen.removeAndNavigateTo(
+                        removes = screenBackStackModel.clearBeforeNavKeys,
+                        screenKey = NormalNavKey.VersionsManager
+                    )
+                },
+                onDownload = { screenBackStackModel.navigateToDownload() },
+                onAccounts = {
+                    screenBackStackModel.mainScreen.removeAndNavigateTo(
+                        removes = screenBackStackModel.clearBeforeNavKeys,
+                        screenKey = NormalNavKey.AccountManager()
+                    )
+                },
+                onSettings = {
+                    screenBackStackModel.mainScreen.removeAndNavigateTo(
+                        removes = screenBackStackModel.clearBeforeNavKeys,
+                        screenKey = screenBackStackModel.settingsScreen
+                    )
+                },
+                onMultiplayer = {
+                    screenBackStackModel.mainScreen.removeAndNavigateTo(
+                        removes = screenBackStackModel.clearBeforeNavKeys,
+                        screenKey = NormalNavKey.Multiplayer
+                    )
+                }
+            )
+            Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
-              ) {
+            ) {
                 NavStateHost(rootKey = screenBackStackModel.mainScreen) {
                     NavigationUI(
                         modifier = Modifier.fillMaxSize(),
@@ -319,7 +240,7 @@ fun MainScreen(
                 ) {
                     changeTasksExpandedState()
                 }
-              }
+            }
             }
         }
     }
@@ -340,7 +261,6 @@ private fun <E: TitledNavKey> TopBar(
     toMultiplayerScreen: () -> Unit,
     openFileManager: () -> Unit,
     changeExpandedState: () -> Unit,
-    onMenu: () -> Unit,
 ) {
     val festivals = LocalFestivals.current
 
@@ -365,21 +285,8 @@ private fun <E: TitledNavKey> TopBar(
                     }
                     .fillMaxHeight()
             ) {
-                Spacer(Modifier.width(8.dp))
-                IconButton(
-                    modifier = Modifier.fillMaxHeight(),
-                    onClick = onMenu
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_menu),
-                        contentDescription = null
-                    )
-                }
-
                 AnimatedVisibility(
-                    visible = !inLauncherScreen,
-                    enter = androidx.compose.animation.EnterTransition.None,
-                    exit = androidx.compose.animation.ExitTransition.None
+                    visible = !inLauncherScreen
                 ) {
                     Row(modifier = Modifier.fillMaxHeight()) {
                         Spacer(Modifier.width(12.dp))
@@ -423,7 +330,6 @@ private fun <E: TitledNavKey> TopBar(
             val childRes = (mainScreenKey as? BackStackNavKey<*>)?.currentKey?.title
 
             Crossfade(
-                animationSpec = androidx.compose.animation.core.snap(),
                 modifier = Modifier.constrainAs(title) {
                     centerVerticallyTo(parent)
                     start.linkTo(backCenter.end, margin = 16.dp)
@@ -477,8 +383,12 @@ private fun <E: TitledNavKey> TopBar(
             ) {
                 AnimatedVisibility(
                     visible = !(isTasksExpanded || taskRunning),
-                    enter = androidx.compose.animation.EnterTransition.None,
-                    exit = androidx.compose.animation.ExitTransition.None
+                    enter = slideInVertically(
+                        initialOffsetY = { -50 }
+                    ) + fadeIn(),
+                    exit = slideOutVertically(
+                        targetOffsetY = { -50 }
+                    ) + fadeOut()
                 ) {
                     Row(
                         modifier = Modifier
@@ -551,7 +461,7 @@ private fun TopBarRailItem(
         modifier = modifier,
         onClick = onClick,
         text = {
-            AnimatedVisibility(visible = selected, enter = androidx.compose.animation.EnterTransition.None, exit = androidx.compose.animation.ExitTransition.None) {
+            AnimatedVisibility(visible = selected) {
                 Row {
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
@@ -618,142 +528,31 @@ private fun NavigationUI(
             popTransitionSpec = rememberTransitionSpec(),
             entryProvider = entryProvider {
                 entry<NormalNavKey.LauncherMain> {
-                    // CYBERNETIC: tela Início própria, ligada ao núcleo (conta, versão e jogar)
-                    val account by AccountsManager.currentAccountFlow.collectAsStateWithLifecycle()
-                    val version by VersionsManager.currentVersion.collectAsStateWithLifecycle()
-                    CyberHomeScreen(
-                        accountName = account?.username ?: "Steve",
-                        isOfflineAccount = account?.let { !(it.isMicrosoftAccount() || it.isAuthServerAccount()) } ?: true,
-                        versionName = version?.takeIf { it.isValid() }?.getVersionName(),
-                        onPlay = {
-                            eventViewModel.sendEvent(
-                                EventViewModel.Event.Launch.Game(VersionsManager.currentVersion.value)
-                            )
+                    CyberHome(
+                        onPlay = { v ->
+                            if (v.isValid()) {
+                                eventViewModel.sendEvent(EventViewModel.Event.Launch.Game(v))
+                            } else {
+                                screenBackStackModel.mainScreen.navigateTo(NormalNavKey.VersionsManager)
+                            }
                         },
-                        onVersions = {
-                            screenBackStackModel.mainScreen.removeAndNavigateTo(
-                                removes = screenBackStackModel.clearBeforeNavKeys,
-                                screenKey = NormalNavKey.VersionsManager
-                            )
-                        },
-                        onAccounts = {
-                            screenBackStackModel.mainScreen.removeAndNavigateTo(
-                                removes = screenBackStackModel.clearBeforeNavKeys,
-                                screenKey = NormalNavKey.AccountManager()
-                            )
-                        },
-                        onSettings = {
-                            screenBackStackModel.mainScreen.removeAndNavigateTo(
-                                removes = screenBackStackModel.clearBeforeNavKeys,
-                                screenKey = screenBackStackModel.settingsScreen
-                            )
-                        }
+                        onOpenVersions = { screenBackStackModel.mainScreen.navigateTo(NormalNavKey.VersionsManager) },
+                        onOpenAccounts = { screenBackStackModel.mainScreen.navigateTo(NormalNavKey.AccountManager()) },
+                        onOpenDownload = { screenBackStackModel.navigateToDownload() }
                     )
                 }
-                entry<NestedNavKey.Settings> { key ->
-                    SettingsScreen(
-                        key = key,
-                        backStackViewModel = screenBackStackModel,
-                        openLicenseScreen = { raw ->
-                            backStack.navigateTo(NormalNavKey.License(raw))
-                        },
-                        eventViewModel = eventViewModel,
-                        submitError = submitError
-                    )
-                }
-                entry<NormalNavKey.License> { key ->
-                    LicenseScreen(
-                        key = key,
-                        backStackViewModel = screenBackStackModel
-                    )
-                }
-                entry<NormalNavKey.AccountManager> { key ->
-                    AccountManageScreen(
-                        key = key,
-                        backStackViewModel = screenBackStackModel,
-                        backToMainScreen = toMainScreen,
-                        openLink = { url ->
-                            eventViewModel.sendEvent(EventViewModel.Event.OpenLink(url))
-                        },
-                        eventViewModel = eventViewModel,
-                        submitError = submitError
-                    )
-                }
-                entry<NormalNavKey.WebScreen> { key ->
-                    WebViewScreen(
-                        key = key,
-                        backStackViewModel = screenBackStackModel,
-                        eventViewModel = eventViewModel
-                    )
-                }
-                entry<NormalNavKey.VersionsManager> {
-                    VersionsManageScreen(
-                        backScreenViewModel = screenBackStackModel,
-                        navigateToVersions = navigateToVersions,
-                        navigateToExport = navigateToExport,
-                        eventViewModel = eventViewModel,
-                        submitError = submitError
-                    )
-                }
-                entry<NormalNavKey.FileSelector> { key ->
-                    FileSelectorScreen(
-                        key = key,
-                        backScreenViewModel = screenBackStackModel
-                    ) {
-                        backStack.removeLastOrNull()
-                    }
-                }
-                entry<NestedNavKey.VersionSettings> { key ->
-                    VersionSettingsScreen(
-                        key = key,
-                        modifyViewModel = modifyVersionViewModel,
-                        backScreenViewModel = screenBackStackModel,
-                        backToMainScreen = toMainScreen,
-                        onExportModpack = {
-                            navigateToExport(key.version)
-                        },
-                        eventViewModel = eventViewModel,
-                        submitError = submitError
-                    )
-                }
-                entry<NestedNavKey.VersionExport> { key ->
-                    VersionExportScreen(
-                        key = key,
-                        backScreenViewModel = screenBackStackModel,
-                        eventViewModel = eventViewModel,
-                        backToMainScreen = toMainScreen
-                    )
-                }
-                entry<NestedNavKey.Download> { key ->
-                    DownloadScreen(
-                        key = key,
-                        backScreenViewModel = screenBackStackModel,
-                        eventViewModel = eventViewModel,
-                        modpackImportViewModel = modpackImportViewModel,
-                        submitError = submitError
-                    )
-                }
-                entry<NestedNavKey.AddonInfo> { key ->
-                    AddonInfoScreen(
-                        key = key,
-                        mainScreenKey = screenBackStackModel.mainScreen.currentKey,
-                        addonInfoScreenKey = key.currentKey,
-                        eventViewModel = eventViewModel,
-                        submitError = submitError,
-                    )
-                }
-                entry<NormalNavKey.Multiplayer> {
-                    MultiplayerScreen(
-                        backScreenViewModel = screenBackStackModel,
-                        eventViewModel = eventViewModel
-                    )
-                }
-                entry<NormalNavKey.LogView> { key ->
-                    LogViewScreen(
-                        key = key,
-                        backStackViewModel = screenBackStackModel,
-                    )
-                }
+                entry<NestedNavKey.Settings> { BlankPane("Ajustes") }
+                entry<NormalNavKey.License> { BlankPane("Licença") }
+                entry<NormalNavKey.AccountManager> { BlankPane("Contas") }
+                entry<NormalNavKey.WebScreen> { BlankPane("Web") }
+                entry<NormalNavKey.VersionsManager> { BlankPane("Versões") }
+                entry<NormalNavKey.FileSelector> { BlankPane("Arquivos") }
+                entry<NestedNavKey.VersionSettings> { BlankPane("Configurações da versão") }
+                entry<NestedNavKey.VersionExport> { BlankPane("Exportar") }
+                entry<NestedNavKey.Download> { BlankPane("Download") }
+                entry<NestedNavKey.AddonInfo> { BlankPane("Addon") }
+                entry<NormalNavKey.Multiplayer> { BlankPane("Multijogador") }
+                entry<NormalNavKey.LogView> { BlankPane("Logs") }
             }
         )
     } else {
@@ -773,8 +572,14 @@ private fun TaskMenu(
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     AnimatedVisibility(
         modifier = modifier,
-        enter = androidx.compose.animation.EnterTransition.None,
-        exit = androidx.compose.animation.ExitTransition.None,
+        enter = slideInHorizontally(
+            initialOffsetX = { if (isRtl) it else -it },
+            animationSpec = getAnimateTween()
+        ) + fadeIn(),
+        exit = slideOutHorizontally(
+            targetOffsetX = { if (isRtl) it else -it },
+            animationSpec = getAnimateTween()
+        ) + fadeOut(),
         visible = show
     ) {
         BackgroundCard(
@@ -924,5 +729,13 @@ private fun TaskItem(
                 }
             }
         }
+    }
+}
+/** Painel vazio: a interface será refeita do zero. */
+@Composable
+private fun BlankPane(title: String, content: @Composable () -> Unit = {}) {
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text(title)
+        content()
     }
 }

@@ -58,10 +58,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.takeOrElse
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardInteraction
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardSize
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardSizeClass
-import com.shoyoomc.cyberneticlauncher.cardgrid.model.CardState
+import com.movtery.cardgrid.model.CardInteraction
+import com.movtery.cardgrid.model.CardSize
+import com.movtery.cardgrid.model.CardSizeClass
+import com.movtery.cardgrid.model.CardState
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.game.version.installed.Version
 import com.shoyoomc.cyberneticlauncher.ui.components.LittleTextLabel

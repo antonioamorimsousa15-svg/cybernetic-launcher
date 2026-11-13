@@ -67,9 +67,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.materialkolor.PaletteStyle
-import com.shoyoomc.cyberneticlauncher.colorpicker.ColorPickerController
-import com.shoyoomc.cyberneticlauncher.colorpicker.components.HueBarPicker
-import com.shoyoomc.cyberneticlauncher.colorpicker.rememberColorPickerController
+import com.movtery.colorpicker.ColorPickerController
+import com.movtery.colorpicker.components.HueBarPicker
+import com.movtery.colorpicker.rememberColorPickerController
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.contract.MediaPickerContract
 import com.shoyoomc.cyberneticlauncher.coroutine.Task
@@ -175,7 +175,6 @@ fun LauncherSettingsScreen(
                         getRadioText = { enum ->
                             when (enum) {
                                 ColorThemeType.DYNAMIC -> stringResource(R.string.theme_color_dynamic)
-                                ColorThemeType.SHOYO_RED -> stringResource(R.string.theme_color_shoyo_red)
                                 ColorThemeType.EMBERMIRE -> stringResource(R.string.theme_color_embermire)
                                 ColorThemeType.VELVET_ROSE -> stringResource(R.string.theme_color_velvet_rose)
                                 ColorThemeType.MISTWAVE -> stringResource(R.string.theme_color_mistwave)

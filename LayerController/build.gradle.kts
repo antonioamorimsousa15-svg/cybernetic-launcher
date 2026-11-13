@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shoyoomc.cyberneticlauncher.layer_controller"
+    namespace = "com.movtery.layer_controller"
     compileSdk = 37
 
     defaultConfig {

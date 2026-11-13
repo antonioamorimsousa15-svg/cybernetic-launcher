@@ -18,13 +18,13 @@
 
 package com.shoyoomc.cyberneticlauncher.game.control
 
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.ButtonStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.JoystickStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableButtonStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableJoystickStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.loadButtonStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.loadJoystickStyle
-import com.shoyoomc.cyberneticlauncher.layer_controller.utils.saveToStyleFile
+import com.movtery.layer_controller.data.ButtonStyle
+import com.movtery.layer_controller.data.JoystickStyle
+import com.movtery.layer_controller.observable.ObservableButtonStyle
+import com.movtery.layer_controller.observable.ObservableJoystickStyle
+import com.movtery.layer_controller.utils.loadButtonStyle
+import com.movtery.layer_controller.utils.loadJoystickStyle
+import com.movtery.layer_controller.utils.saveToStyleFile
 import com.shoyoomc.cyberneticlauncher.path.PathManager
 import com.shoyoomc.cyberneticlauncher.utils.logging.Logger
 import kotlinx.coroutines.CoroutineScope

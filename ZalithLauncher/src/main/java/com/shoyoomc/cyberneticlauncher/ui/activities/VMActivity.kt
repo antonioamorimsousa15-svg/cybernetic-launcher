@@ -90,7 +90,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.jakewharton.processphoenix.ProcessPhoenix
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.LwjglGlfwKeycode
+import com.movtery.inputmap.keycodes.LwjglGlfwKeycode
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.bridge.CURSOR_DISABLED
 import com.shoyoomc.cyberneticlauncher.bridge.FliteTts
@@ -906,7 +906,7 @@ class VMActivity : BaseAppCompatActivity(), SurfaceTextureListener {
         SdlBridge.prepareSurface(this, nativeSurface, gameTextureView?.parent as? ViewGroup, surface)
         //游戏请求 GLFW direct gamepad 时的通知接收方
         CallbackBridge.setDirectGamepadEnableHandler {
-            LoggerBridge.append("CYBERNETIC LAUNCHER: Direct gamepad handler enabled")
+            LoggerBridge.append("ZalithLauncher: Direct gamepad handler enabled")
         }
         if (vmViewModel.isRunning) {
             ZLBridge.setupBridgeWindow(nativeSurface)

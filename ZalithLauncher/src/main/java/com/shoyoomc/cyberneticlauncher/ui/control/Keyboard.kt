@@ -64,7 +64,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.ControlEventKeycode
+import com.movtery.inputmap.keycodes.ControlEventKeycode
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.components.AutoSizeText
 import com.shoyoomc.cyberneticlauncher.ui.components.MarqueeText

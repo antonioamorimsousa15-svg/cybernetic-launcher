@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.shoyoomc.cyberneticlauncher.cardgrid"
+    namespace = "com.movtery.cardgrid"
     compileSdk = 37
 
     defaultConfig {

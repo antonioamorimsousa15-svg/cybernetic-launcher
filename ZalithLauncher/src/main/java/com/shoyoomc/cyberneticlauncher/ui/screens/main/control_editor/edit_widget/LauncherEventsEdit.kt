@@ -33,9 +33,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.ControlEventKeycode
-import com.shoyoomc.cyberneticlauncher.layer_controller.event.ClickEvent
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableClickEventsProvider
+import com.movtery.inputmap.keycodes.ControlEventKeycode
+import com.movtery.layer_controller.event.ClickEvent
+import com.movtery.layer_controller.observable.ObservableClickEventsProvider
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.components.verticalScrollWithBar
 import com.shoyoomc.cyberneticlauncher.ui.control.event.LAUNCHER_EVENT_SCROLL_DOWN

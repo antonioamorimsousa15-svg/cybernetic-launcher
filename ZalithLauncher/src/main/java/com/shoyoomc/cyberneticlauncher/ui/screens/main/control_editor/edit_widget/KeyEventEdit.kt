@@ -44,9 +44,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.shoyoomc.cyberneticlauncher.inputmap.keycodes.ControlEventKeyName
-import com.shoyoomc.cyberneticlauncher.layer_controller.event.ClickEvent
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableClickEventsProvider
+import com.movtery.inputmap.keycodes.ControlEventKeyName
+import com.movtery.layer_controller.event.ClickEvent
+import com.movtery.layer_controller.observable.ObservableClickEventsProvider
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.components.MarqueeText
 import com.shoyoomc.cyberneticlauncher.ui.control.Keyboard

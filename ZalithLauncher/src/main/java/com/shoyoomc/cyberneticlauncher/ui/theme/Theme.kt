@@ -35,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamicColorScheme
 import com.shoyoomc.cyberneticlauncher.setting.AllSettings
@@ -82,116 +81,6 @@ private val embermireLight = lightColorScheme(
     surfaceContainer = surfaceContainerLight.embermire,
     surfaceContainerHigh = surfaceContainerHighLight.embermire,
     surfaceContainerHighest = surfaceContainerHighestLight.embermire,
-)
-
-/** Esquema Material derivado da paleta ativa (Cryogenic = azul/ciano, translúcido). */
-private fun shoyoSchemeFor(p: com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoPalette): androidx.compose.material3.ColorScheme {
-    if (p.name == "Industrial") return shoyoIndustrialDark
-    val onSurface = Color(0xFFEAF4FF)
-    fun mix(a: Color, b: Color, f: Float) = androidx.compose.ui.graphics.lerp(a, b, f)
-    return darkColorScheme(
-        primary = p.accent, onPrimary = p.onAccent,
-        primaryContainer = mix(p.bg, p.accentDeep, 0.35f), onPrimaryContainer = mix(Color.White, p.accent, 0.3f),
-        secondary = p.secondary, onSecondary = p.onAccent,
-        secondaryContainer = mix(p.bg, p.secondaryDeep, 0.30f), onSecondaryContainer = mix(Color.White, p.secondary, 0.3f),
-        tertiary = p.textSecondary, onTertiary = p.bg,
-        tertiaryContainer = mix(p.bg, p.textSecondary, 0.25f), onTertiaryContainer = onSurface,
-        error = Color(0xFFFF6B7A), onError = Color(0xFF2A0509),
-        errorContainer = Color(0xFF6A1A26), onErrorContainer = Color(0xFFFFDAD9),
-        background = p.bg, onBackground = onSurface,
-        surface = p.bg, onSurface = onSurface,
-        surfaceVariant = mix(p.bg, p.accent, 0.14f), onSurfaceVariant = p.textSecondary,
-        outline = mix(p.bg, p.accent, 0.55f), outlineVariant = mix(p.bg, p.accent, 0.25f),
-        scrim = Color.Black,
-        inverseSurface = onSurface, inverseOnSurface = p.bg, inversePrimary = p.accentDeep,
-        surfaceDim = p.bg, surfaceBright = mix(p.bg, p.accent, 0.20f),
-        surfaceContainerLowest = mix(p.bg, Color.Black, 0.4f),
-        surfaceContainerLow = mix(p.bg, p.bgAlt, 0.6f),
-        surfaceContainer = p.bgAlt,
-        surfaceContainerHigh = mix(p.bgAlt, p.accent, 0.10f),
-        surfaceContainerHighest = mix(p.bgAlt, p.accent, 0.18f),
-    )
-}
-
-/** Escala global da interface (1.0 = padrão do Android). Menor = mais compacto. */
-const val CYBER_UI_SCALE = 0.82f
-
-/** Industrial Cyber: preto com laranja. Esquema único do CYBERNETIC (todas as telas). */
-private val shoyoIndustrialDark = darkColorScheme(
-    primary = Color(0xFFFF7A1A),
-    onPrimary = Color(0xFF0A0500),
-    primaryContainer = Color(0xFF5A2600),
-    onPrimaryContainer = Color(0xFFFFDCC2),
-    secondary = Color(0xFFFFC21A),
-    onSecondary = Color(0xFF2A1D00),
-    secondaryContainer = Color(0xFF3A2A0A),
-    onSecondaryContainer = Color(0xFFFFE6A8),
-    tertiary = Color(0xFFC9A583),
-    onTertiary = Color(0xFF2A1A08),
-    tertiaryContainer = Color(0xFF3E2C1A),
-    onTertiaryContainer = Color(0xFFF2DCC2),
-    error = Color(0xFFFF5C4D),
-    onError = Color(0xFF2A0500),
-    errorContainer = Color(0xFF7A1A10),
-    onErrorContainer = Color(0xFFFFDAD6),
-    background = Color(0xFF0A0807),
-    onBackground = Color(0xFFF2E8DF),
-    surface = Color(0xFF0A0807),
-    onSurface = Color(0xFFF2E8DF),
-    surfaceVariant = Color(0xFF2A211A),
-    onSurfaceVariant = Color(0xFFD6C3B3),
-    outline = Color(0xFF9A7B5E),
-    outlineVariant = Color(0xFF4A3828),
-    scrim = Color(0xFF000000),
-    inverseSurface = Color(0xFFF2E8DF),
-    inverseOnSurface = Color(0xFF2A1F16),
-    inversePrimary = Color(0xFFB34A00),
-    surfaceDim = Color(0xFF0A0807),
-    surfaceBright = Color(0xFF2E241B),
-    surfaceContainerLowest = Color(0xFF060504),
-    surfaceContainerLow = Color(0xFF120E0B),
-    surfaceContainer = Color(0xFF1A1410),
-    surfaceContainerHigh = Color(0xFF251C15),
-    surfaceContainerHighest = Color(0xFF30251C),
-)
-
-/** Tema "Vermelho Shoyo": preto profundo com vermelho. Usado também no modo claro. */
-private val shoyoRedDark = darkColorScheme(
-    primary = Color(0xFFFF4D5A),
-    onPrimary = Color(0xFF2A0006),
-    primaryContainer = Color(0xFF6B0F1B),
-    onPrimaryContainer = Color(0xFFFFDADC),
-    secondary = Color(0xFFE8A0A6),
-    onSecondary = Color(0xFF3A0D12),
-    secondaryContainer = Color(0xFF3F161B),
-    onSecondaryContainer = Color(0xFFFFD9DB),
-    tertiary = Color(0xFFD9A85F),
-    onTertiary = Color(0xFF3A2600),
-    tertiaryContainer = Color(0xFF55380A),
-    onTertiaryContainer = Color(0xFFFFDDA8),
-    error = Color(0xFFFFB4AB),
-    onError = Color(0xFF690005),
-    errorContainer = Color(0xFF93000A),
-    onErrorContainer = Color(0xFFFFDAD6),
-    background = Color(0xFF0A0305),
-    onBackground = Color(0xFFF2E6E7),
-    surface = Color(0xFF0A0305),
-    onSurface = Color(0xFFF2E6E7),
-    surfaceVariant = Color(0xFF2E1519),
-    onSurfaceVariant = Color(0xFFD8BFC2),
-    outline = Color(0xFF9A7378),
-    outlineVariant = Color(0xFF4D2B30),
-    scrim = Color(0xFF000000),
-    inverseSurface = Color(0xFFF2E6E7),
-    inverseOnSurface = Color(0xFF2A1A1D),
-    inversePrimary = Color(0xFFB3202F),
-    surfaceDim = Color(0xFF0A0305),
-    surfaceBright = Color(0xFF2E1B1F),
-    surfaceContainerLowest = Color(0xFF060203),
-    surfaceContainerLow = Color(0xFF130709),
-    surfaceContainer = Color(0xFF1A0B0E),
-    surfaceContainerHigh = Color(0xFF251216),
-    surfaceContainerHighest = Color(0xFF301A1F),
 )
 
 private val embermireDark = darkColorScheme(
@@ -726,14 +615,13 @@ fun ZalithLauncherTheme(
 
     val context = LocalContext.current
 
-    val legacyScheme = remember(darkTheme, dynamicColor, colorTheme, customColor, customPaletteStyle) {
+    val targetColorScheme = remember(darkTheme, dynamicColor, colorTheme, customColor, customPaletteStyle) {
         when {
             dynamicColor && colorTheme == ColorThemeType.DYNAMIC && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             }
 
             darkTheme -> when (colorTheme) {
-                ColorThemeType.SHOYO_RED -> shoyoRedDark
                 ColorThemeType.EMBERMIRE -> embermireDark
                 ColorThemeType.VELVET_ROSE -> velvetRoseDark
                 ColorThemeType.MISTWAVE -> mistwaveDark
@@ -749,7 +637,6 @@ fun ZalithLauncherTheme(
             }
 
             else -> when (colorTheme) {
-                ColorThemeType.SHOYO_RED -> shoyoRedDark
                 ColorThemeType.EMBERMIRE -> embermireLight
                 ColorThemeType.VELVET_ROSE -> velvetRoseLight
                 ColorThemeType.MISTWAVE -> mistwaveLight
@@ -765,9 +652,6 @@ fun ZalithLauncherTheme(
             }
         }
     }
-
-    @Suppress("UNUSED_VARIABLE") val unusedLegacy = legacyScheme
-    val targetColorScheme = shoyoSchemeFor(com.shoyoomc.cyberneticlauncher.cyber.theme.ShoyoUi.palette)
 
     var currentDarkTheme by remember { mutableStateOf(darkTheme) }
     var currentDisplayScheme by remember { mutableStateOf(targetColorScheme) }
@@ -789,27 +673,14 @@ fun ZalithLauncherTheme(
         }
     }
 
-    // CYBERNETIC: interface compacta (como nas referências) — escala global da UI
-    val baseDensity = androidx.compose.ui.platform.LocalDensity.current
-    val compactDensity = remember(baseDensity) {
-        androidx.compose.ui.unit.Density(baseDensity.density * CYBER_UI_SCALE, baseDensity.fontScale)
-    }
     CompositionLocalProvider(
         LocalBackgroundViewModel provides backgroundViewModel,
-        LocalFestivals provides festivals,
-        androidx.compose.ui.platform.LocalDensity provides compactDensity
+        LocalFestivals provides festivals
     ) {
         MaterialExpressiveTheme(
             colorScheme = currentDisplayScheme,
             motionScheme = MotionScheme.expressive(),
             typography = AppTypography,
-            shapes = androidx.compose.material3.Shapes(
-                extraSmall = androidx.compose.foundation.shape.CutCornerShape(topStart = 6.dp, bottomEnd = 6.dp),
-                small = androidx.compose.foundation.shape.CutCornerShape(topStart = 8.dp, bottomEnd = 8.dp),
-                medium = androidx.compose.foundation.shape.CutCornerShape(topStart = 12.dp, bottomEnd = 12.dp),
-                large = androidx.compose.foundation.shape.CutCornerShape(topStart = 16.dp, bottomEnd = 16.dp),
-                extraLarge = androidx.compose.foundation.shape.CutCornerShape(topStart = 22.dp, bottomEnd = 22.dp),
-            ),
             content = content
         )
     }

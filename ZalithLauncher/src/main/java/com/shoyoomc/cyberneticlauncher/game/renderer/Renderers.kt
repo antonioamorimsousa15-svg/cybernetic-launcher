@@ -18,9 +18,13 @@
 
 package com.shoyoomc.cyberneticlauncher.game.renderer
 
+import com.shoyoomc.cyberneticlauncher.game.renderer.renderers.FreedrenoRenderer
 import com.shoyoomc.cyberneticlauncher.game.renderer.renderers.GL4ESRenderer
+import com.shoyoomc.cyberneticlauncher.game.renderer.renderers.KopperZinkRenderer
 import com.shoyoomc.cyberneticlauncher.game.renderer.renderers.MobileGluesRenderer
 import com.shoyoomc.cyberneticlauncher.game.renderer.renderers.NGGL4ESRenderer
+import com.shoyoomc.cyberneticlauncher.game.renderer.renderers.PanfrostRenderer
+import com.shoyoomc.cyberneticlauncher.game.renderer.renderers.VirGLRenderer
 import com.shoyoomc.cyberneticlauncher.utils.logging.Logger
 
 private const val TAG = "Renderers"
@@ -45,10 +49,13 @@ object Renderers {
         }
 
         addRenderers(
-            // SHOYO: somente renderizadores OpenGL (sem Vulkan/Zink/Freedreno/Panfrost/VirGL)
             NGGL4ESRenderer,
             GL4ESRenderer,
-            MobileGluesRenderer
+            KopperZinkRenderer,
+            MobileGluesRenderer,
+            VirGLRenderer,
+            FreedrenoRenderer,
+            PanfrostRenderer
         )
     }
 

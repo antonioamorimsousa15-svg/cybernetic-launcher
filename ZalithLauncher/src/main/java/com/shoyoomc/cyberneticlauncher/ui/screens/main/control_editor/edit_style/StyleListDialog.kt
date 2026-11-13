@@ -59,8 +59,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.shoyoomc.cyberneticlauncher.layer_controller.layout.RendererStyleBox
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableButtonStyle
+import com.movtery.layer_controller.layout.RendererStyleBox
+import com.movtery.layer_controller.observable.ObservableButtonStyle
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.setting.enums.isLauncherInDarkTheme
 import com.shoyoomc.cyberneticlauncher.ui.components.MarqueeText

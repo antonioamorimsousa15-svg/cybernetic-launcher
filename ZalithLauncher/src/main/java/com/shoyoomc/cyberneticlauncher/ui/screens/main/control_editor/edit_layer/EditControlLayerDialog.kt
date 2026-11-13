@@ -50,8 +50,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.shoyoomc.cyberneticlauncher.layer_controller.data.VisibilityType
-import com.shoyoomc.cyberneticlauncher.layer_controller.observable.ObservableControlLayer
+import com.movtery.layer_controller.data.VisibilityType
+import com.movtery.layer_controller.observable.ObservableControlLayer
 import com.shoyoomc.cyberneticlauncher.R
 import com.shoyoomc.cyberneticlauncher.ui.components.ImePanContainer
 import com.shoyoomc.cyberneticlauncher.ui.components.MarqueeText

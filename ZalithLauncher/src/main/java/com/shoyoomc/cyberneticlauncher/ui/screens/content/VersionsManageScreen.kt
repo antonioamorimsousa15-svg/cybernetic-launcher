@@ -22,6 +22,7 @@ import android.os.Environment
 import com.shoyoomc.cyberneticlauncher.cyber.theme.techFrame
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.border
 import androidx.compose.foundation.background

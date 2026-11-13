@@ -1,5 +1,7 @@
 package com.shoyoomc.cyberneticlauncher.cyber.theme
 
+import androidx.compose.ui.text.font.Font
+import com.shoyoomc.cyberneticlauncher.R
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -121,7 +123,7 @@ fun HudLabel(text: String, modifier: Modifier = Modifier, color: Color = ShoyoCo
         Spacer(Modifier.width(8.dp))
         Text(
             text.uppercase(), color = color,
-            fontFamily = com.shoyoomc.cyberneticlauncher.ui.theme.SpaceGrotesk, fontSize = 11.sp, letterSpacing = 2.sp
+            fontFamily = CyberFont, fontSize = 11.sp, letterSpacing = 2.sp
         )
     }
 }
@@ -190,8 +192,8 @@ fun HudStat(label: String, value: String, modifier: Modifier = Modifier) {
             .padding(start = 16.dp, end = 18.dp, top = 6.dp, bottom = 6.dp)
     ) {
         androidx.compose.foundation.layout.Column {
-            Text(label.uppercase(), color = ShoyoColors.TextSecondary, fontFamily = com.shoyoomc.cyberneticlauncher.ui.theme.SpaceGrotesk, fontSize = 10.sp, letterSpacing = 2.sp)
-            Text(value, color = ShoyoColors.TextPrimary, fontFamily = com.shoyoomc.cyberneticlauncher.ui.theme.SpaceGrotesk, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(label.uppercase(), color = ShoyoColors.TextSecondary, fontFamily = CyberFont, fontSize = 10.sp, letterSpacing = 2.sp)
+            Text(value, color = ShoyoColors.TextPrimary, fontFamily = CyberFont, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
     }
 }
@@ -255,3 +257,10 @@ fun Modifier.techFrame(): Modifier = composed {
         }
     }
 }
+
+/** Fonte técnica local (mesmos arquivos do Space Grotesk em res/font). */
+private val CyberFont = FontFamily(
+    Font(R.font.space_grotesk_regular, FontWeight.Normal),
+    Font(R.font.space_grotesk_medium, FontWeight.Medium),
+    Font(R.font.space_grotesk_bold, FontWeight.Bold),
+)

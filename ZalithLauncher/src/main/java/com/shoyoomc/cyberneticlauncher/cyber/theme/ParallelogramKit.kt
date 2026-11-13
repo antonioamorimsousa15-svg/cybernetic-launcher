@@ -1,7 +1,5 @@
 package com.shoyoomc.cyberneticlauncher.cyber.theme
 
-import androidx.compose.ui.text.font.Font
-import com.shoyoomc.cyberneticlauncher.R
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -258,9 +256,5 @@ fun Modifier.techFrame(): Modifier = composed {
     }
 }
 
-/** Fonte técnica local (mesmos arquivos do Space Grotesk em res/font). */
-private val CyberFont = FontFamily(
-    Font(R.font.space_grotesk_regular, FontWeight.Normal),
-    Font(R.font.space_grotesk_medium, FontWeight.Medium),
-    Font(R.font.space_grotesk_bold, FontWeight.Bold),
-)
+/** Fonte técnica (sem dependência de recursos). */
+private val CyberFont = FontFamily.SansSerif

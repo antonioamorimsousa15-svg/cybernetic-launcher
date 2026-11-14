@@ -50,12 +50,12 @@ class AfImageSlot(private val prefs: SharedPreferences, private val key: String)
     var opacity by mutableIntStateOf(prefs.getInt("$key.opacity", 100))
         private set
 
-    fun setUri(value: String?) {
+    fun updateUri(value: String?) {
         uri = value
         prefs.edit().apply { if (value == null) remove("$key.uri") else putString("$key.uri", value) }.apply()
     }
 
-    fun setOpacity(value: Int) {
+    fun updateOpacity(value: Int) {
         opacity = value.coerceIn(0, 100)
         prefs.edit().putInt("$key.opacity", opacity).apply()
     }
@@ -88,7 +88,7 @@ fun AfSlotDialog(title: String, description: String, slot: AfImageSlot, onDismis
             runCatching {
                 ctx.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            slot.setUri(uri.toString())
+            slot.updateUri(uri.toString())
         }
     }
     Dialog(onDismissRequest = onDismiss) {
@@ -103,14 +103,14 @@ fun AfSlotDialog(title: String, description: String, slot: AfImageSlot, onDismis
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     AfButton("Escolher", Modifier.weight(1f), R.drawable.ic_image_filled) { picker.launch(arrayOf("image/*")) }
                     Box(Modifier.weight(1f).alpha(if (slot.uri != null) 1f else 0.45f)) {
-                        AfOutlineButton("Usar padrão", Modifier.fillMaxWidth()) { if (slot.uri != null) slot.setUri(null) }
+                        AfOutlineButton("Usar padrão", Modifier.fillMaxWidth()) { if (slot.uri != null) slot.updateUri(null) }
                     }
                 }
                 Text("Opacidade", color = AfText, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Slider(
                         value = slot.opacity / 100f,
-                        onValueChange = { slot.setOpacity((it * 100f).roundToInt()) },
+                        onValueChange = { slot.updateOpacity((it * 100f).roundToInt()) },
                         modifier = Modifier.weight(1f),
                         colors = SliderDefaults.colors(
                             thumbColor = AfAccent, activeTrackColor = AfAccent, inactiveTrackColor = AfBorder.copy(alpha = 0.35f)

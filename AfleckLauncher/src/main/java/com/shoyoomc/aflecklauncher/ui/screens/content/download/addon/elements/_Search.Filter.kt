@@ -366,7 +366,7 @@ private fun <E> SuggestionsText(
 @Composable
 fun BaseFilterLayout(
     modifier: Modifier = Modifier,
-    shape: Shape = MaterialTheme.shapes.large,
+    shape: Shape = androidx.compose.foundation.shape.RoundedCornerShape(18.dp),
     influencedByBackground: Boolean = true,
     color: Color = cardColor(influencedByBackground),
     contentColor: Color = onCardColor(),
@@ -387,6 +387,7 @@ fun BaseFilterLayout(
             shape = shape,
             color = color,
             contentColor = contentColor,
+            border = androidx.compose.foundation.BorderStroke(1.dp, com.shoyoomc.aflecklauncher.ui.screens.main.AfBorder.copy(alpha = 0.55f)),
             onClick = onClick,
         ) { Content() }
     } else {
@@ -395,6 +396,7 @@ fun BaseFilterLayout(
             shape = shape,
             color = color,
             contentColor = contentColor,
+            border = androidx.compose.foundation.BorderStroke(1.dp, com.shoyoomc.aflecklauncher.ui.screens.main.AfBorder.copy(alpha = 0.55f)),
         ) { Content() }
     }
 }

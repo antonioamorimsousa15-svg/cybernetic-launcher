@@ -4,7 +4,7 @@
  */
 package org.lwjgl.glfw;
 
-import com.shoyoomc.cyberneticlauncher.CursorRegistry;
+import com.shoyoomc.aflecklauncher.CursorRegistry;
 
 import android.util.*;
 

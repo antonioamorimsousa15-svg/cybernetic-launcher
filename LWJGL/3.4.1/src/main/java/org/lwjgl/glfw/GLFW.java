@@ -14,7 +14,7 @@ import java.nio.*;
 
 
 import org.lwjgl.*;
-import com.shoyoomc.cyberneticlauncher.CursorRegistry;
+import com.shoyoomc.aflecklauncher.CursorRegistry;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.opengl.GL20.*;

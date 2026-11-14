@@ -10,7 +10,7 @@ import org.jspecify.annotations.*;
 import java.nio.*;
 
 import org.lwjgl.glfw.CallbackBridge;
-import com.shoyoomc.cyberneticlauncher.SdlCursorRegistry;
+import com.shoyoomc.aflecklauncher.SdlCursorRegistry;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.APIUtil.*;

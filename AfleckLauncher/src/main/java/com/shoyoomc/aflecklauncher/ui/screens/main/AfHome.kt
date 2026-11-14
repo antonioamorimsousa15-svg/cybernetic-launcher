@@ -25,6 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,6 +52,47 @@ fun AfHome(
     onOpenAccounts: () -> Unit,
     onOpenDownload: () -> Unit,
     onOpenSettings: () -> Unit,
+) {
+    val homeSlot = rememberAfSlot("home")
+    val slot916 = rememberAfSlot("card916")
+    val shadersSlot = rememberAfSlot("shaders")
+    val modsSlot = rememberAfSlot("mods")
+    var dialog by remember { mutableStateOf<String?>(null) }
+
+    Box(Modifier.fillMaxSize()) {
+        AfSlotImage(homeSlot, null, Modifier.fillMaxSize())
+        AfHomeContent(
+            onPlay, onOpenVersions, onOpenAccounts, onOpenDownload, onOpenSettings,
+            slot916, shadersSlot, modsSlot, onEdit = { dialog = it }
+        )
+    }
+    when (dialog) {
+        "home" -> AfSlotDialog(
+            "Wallpaper do painel inicial",
+            "Imagem ou GIF só para este painel. A opacidade daqui é separada do fundo do Launcher.",
+            homeSlot
+        ) { dialog = null }
+        "card916" -> AfSlotDialog(
+            "Wallpaper 9:16",
+            "Imagem ou GIF só para o quadro 9:16 da tela inicial. A opacidade daqui é separada das outras.",
+            slot916
+        ) { dialog = null }
+        "shaders" -> AfSlotDialog("Imagem de Shaders", "Imagem do cartão de Shaders.", shadersSlot) { dialog = null }
+        "mods" -> AfSlotDialog("Imagem de Mods", "Imagem do cartão de Mods.", modsSlot) { dialog = null }
+    }
+}
+
+@Composable
+private fun AfHomeContent(
+    onPlay: (Version) -> Unit,
+    onOpenVersions: () -> Unit,
+    onOpenAccounts: () -> Unit,
+    onOpenDownload: () -> Unit,
+    onOpenSettings: () -> Unit,
+    slot916: AfImageSlot,
+    shadersSlot: AfImageSlot,
+    modsSlot: AfImageSlot,
+    onEdit: (String) -> Unit,
 ) {
     val account by AccountsManager.currentAccountFlow.collectAsState()
     val current by VersionsManager.currentVersion.collectAsState()
@@ -80,7 +124,7 @@ fun AfHome(
                         } else {
                             AfButton("BAIXAR MINECRAFT", Modifier.weight(1f), R.drawable.ic_download_2_filled, onOpenDownload)
                         }
-                        AfIconCircle(R.drawable.ic_image_filled, size = 50.dp)
+                        Box(Modifier.afClick { onEdit("home") }) { AfIconCircle(R.drawable.ic_image_filled, size = 50.dp) }
                     }
                 }
             }
@@ -130,8 +174,10 @@ fun AfHome(
                 Modifier.weight(1f).fillMaxHeight().clip(RoundedCornerShape(28.dp))
                     .border(2.dp, AfBorder, RoundedCornerShape(28.dp))
             ) {
-                Image(painterResource(R.drawable.af_bg), null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-                AfIconCircle(R.drawable.ic_image_filled, size = 40.dp, modifier = Modifier.align(Alignment.TopEnd).padding(8.dp))
+                AfSlotImage(slot916, R.drawable.af_bg, Modifier.fillMaxSize())
+                Box(Modifier.align(Alignment.TopEnd).padding(8.dp).afClick { onEdit("card916") }) {
+                    AfIconCircle(R.drawable.ic_image_filled, size = 40.dp)
+                }
                 Text(
                     "9:16", color = AfText, fontSize = 13.sp, fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.BottomStart).padding(10.dp).clip(RoundedCornerShape(10.dp))
@@ -143,12 +189,14 @@ fun AfHome(
         Row(Modifier.fillMaxWidth().height(184.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             PromoCard(
                 Modifier.weight(1.6f).fillMaxHeight(), R.drawable.ic_package_2_outlined, "Shaders", "Ver todas ›",
-                "Deixe seu mundo mais bonito com shaders.", "Explorar ›", onOpenDownload
-            )
+                "Deixe seu mundo mais bonito com shaders.", "Explorar ›", onOpenDownload,
+                shadersSlot
+            ) { onEdit("shaders") }
             PromoCard(
                 Modifier.weight(1.25f).fillMaxHeight(), R.drawable.ic_extension_outlined, "Mods", null,
-                "Turbine suas versões com mods novos.", "Ver mods ›", onOpenDownload
-            )
+                "Turbine suas versões com mods novos.", "Ver mods ›", onOpenDownload,
+                modsSlot
+            ) { onEdit("mods") }
             // Configurações Rápidas
             AfPanel(Modifier.weight(1.5f).fillMaxHeight()) {
                 Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -174,7 +222,8 @@ fun AfHome(
 
 @Composable
 private fun PromoCard(
-    modifier: Modifier, icon: Int, title: String, seeAll: String?, text: String, buttonText: String, onClick: () -> Unit
+    modifier: Modifier, icon: Int, title: String, seeAll: String?, text: String, buttonText: String, onClick: () -> Unit,
+    slot: AfImageSlot, onEdit: () -> Unit
 ) {
     AfPanel(modifier) {
         Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -186,16 +235,21 @@ private fun PromoCard(
                     Text(seeAll, color = AfAccent, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.afClick(onClick))
                     Spacer(Modifier.width(8.dp))
                 }
-                AfIconCircle(R.drawable.ic_edit_outlined, size = 34.dp)
+                Box(Modifier.afClick(onEdit)) { AfIconCircle(R.drawable.ic_edit_outlined, size = 34.dp) }
             }
             Row(Modifier.weight(1f).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Box(
                     Modifier.fillMaxHeight().aspectRatio(1f).clip(RoundedCornerShape(20.dp))
                         .background(Brush.verticalGradient(listOf(AfNavy, AfPanelDeep)))
-                        .border(1.5.dp, AfBorder, RoundedCornerShape(20.dp)),
+                        .border(1.5.dp, AfBorder, RoundedCornerShape(20.dp))
+                        .afClick(onEdit),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(painterResource(R.drawable.ic_image_outlined), null, tint = AfBorder, modifier = Modifier.size(30.dp))
+                    if (slot.uri == null) {
+                        Icon(painterResource(R.drawable.ic_image_outlined), null, tint = AfBorder, modifier = Modifier.size(30.dp))
+                    } else {
+                        AfSlotImage(slot, null, Modifier.fillMaxSize())
+                    }
                 }
                 Column(Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(text, color = AfText, fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 3, overflow = TextOverflow.Ellipsis)

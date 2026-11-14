@@ -185,7 +185,7 @@ fun MainScreen(
                     mainScreenKey is NestedNavKey.Download -> "Download"
                     mainScreenKey is NormalNavKey.AccountManager -> "Contas"
                     mainScreenKey is NestedNavKey.Settings -> "Ajustes"
-                    else -> "Cybernetic"
+                    else -> "Afleck"
                 },
                 onLogo = toMainScreen,
                 onFiles = {
@@ -569,18 +569,110 @@ private fun NavigationUI(
                         }
                     )
                 }
-                entry<NestedNavKey.Settings> { BlankPane("Ajustes") }
-                entry<NormalNavKey.License> { BlankPane("Licença") }
-                entry<NormalNavKey.AccountManager> { BlankPane("Contas") }
-                entry<NormalNavKey.WebScreen> { BlankPane("Web") }
-                entry<NormalNavKey.VersionsManager> { BlankPane("Versões") }
-                entry<NormalNavKey.FileSelector> { BlankPane("Arquivos") }
-                entry<NestedNavKey.VersionSettings> { BlankPane("Configurações da versão") }
-                entry<NestedNavKey.VersionExport> { BlankPane("Exportar") }
-                entry<NestedNavKey.Download> { BlankPane("Download") }
-                entry<NestedNavKey.AddonInfo> { BlankPane("Addon") }
-                entry<NormalNavKey.Multiplayer> { BlankPane("Multijogador") }
-                entry<NormalNavKey.LogView> { BlankPane("Logs") }
+                entry<NestedNavKey.Settings> { key ->
+                    SettingsScreen(
+                        key = key,
+                        backStackViewModel = screenBackStackModel,
+                        openLicenseScreen = { raw ->
+                            backStack.navigateTo(NormalNavKey.License(raw))
+                        },
+                        eventViewModel = eventViewModel,
+                        submitError = submitError
+                    )
+                }
+                entry<NormalNavKey.License> { key ->
+                    LicenseScreen(
+                        key = key,
+                        backStackViewModel = screenBackStackModel
+                    )
+                }
+                entry<NormalNavKey.AccountManager> { key ->
+                    AccountManageScreen(
+                        key = key,
+                        backStackViewModel = screenBackStackModel,
+                        backToMainScreen = toMainScreen,
+                        openLink = { url ->
+                            eventViewModel.sendEvent(EventViewModel.Event.OpenLink(url))
+                        },
+                        eventViewModel = eventViewModel,
+                        submitError = submitError
+                    )
+                }
+                entry<NormalNavKey.WebScreen> { key ->
+                    WebViewScreen(
+                        key = key,
+                        backStackViewModel = screenBackStackModel,
+                        eventViewModel = eventViewModel
+                    )
+                }
+                entry<NormalNavKey.VersionsManager> {
+                    VersionsManageScreen(
+                        backScreenViewModel = screenBackStackModel,
+                        navigateToVersions = navigateToVersions,
+                        navigateToExport = navigateToExport,
+                        eventViewModel = eventViewModel,
+                        submitError = submitError
+                    )
+                }
+                entry<NormalNavKey.FileSelector> { key ->
+                    FileSelectorScreen(
+                        key = key,
+                        backScreenViewModel = screenBackStackModel
+                    ) {
+                        backStack.removeLastOrNull()
+                    }
+                }
+                entry<NestedNavKey.VersionSettings> { key ->
+                    VersionSettingsScreen(
+                        key = key,
+                        modifyViewModel = modifyVersionViewModel,
+                        backScreenViewModel = screenBackStackModel,
+                        backToMainScreen = toMainScreen,
+                        onExportModpack = {
+                            navigateToExport(key.version)
+                        },
+                        eventViewModel = eventViewModel,
+                        submitError = submitError
+                    )
+                }
+                entry<NestedNavKey.VersionExport> { key ->
+                    VersionExportScreen(
+                        key = key,
+                        backScreenViewModel = screenBackStackModel,
+                        eventViewModel = eventViewModel,
+                        backToMainScreen = toMainScreen
+                    )
+                }
+                entry<NestedNavKey.Download> { key ->
+                    DownloadScreen(
+                        key = key,
+                        backScreenViewModel = screenBackStackModel,
+                        eventViewModel = eventViewModel,
+                        modpackImportViewModel = modpackImportViewModel,
+                        submitError = submitError
+                    )
+                }
+                entry<NestedNavKey.AddonInfo> { key ->
+                    AddonInfoScreen(
+                        key = key,
+                        mainScreenKey = screenBackStackModel.mainScreen.currentKey,
+                        addonInfoScreenKey = key.currentKey,
+                        eventViewModel = eventViewModel,
+                        submitError = submitError,
+                    )
+                }
+                entry<NormalNavKey.Multiplayer> {
+                    MultiplayerScreen(
+                        backScreenViewModel = screenBackStackModel,
+                        eventViewModel = eventViewModel
+                    )
+                }
+                entry<NormalNavKey.LogView> { key ->
+                    LogViewScreen(
+                        key = key,
+                        backStackViewModel = screenBackStackModel,
+                    )
+                }
             }
         )
     } else {

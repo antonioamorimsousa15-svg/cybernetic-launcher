@@ -37,11 +37,13 @@ fun AfSidebar(
     inDownload: Boolean,
     inAccounts: Boolean,
     inSettings: Boolean,
+    inAppearance: Boolean,
     onHome: () -> Unit,
     onVersions: () -> Unit,
     onDownload: () -> Unit,
     onAccounts: () -> Unit,
     onSettings: () -> Unit,
+    onAppearance: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AfPanel(modifier = modifier.width(190.dp).fillMaxHeight(), radius = 30.dp, deep = true) {
@@ -54,6 +56,7 @@ fun AfSidebar(
             NavPill(R.drawable.ic_download_2_filled, "Download", inDownload, onDownload)
             NavPill(R.drawable.ic_person_filled, "Contas", inAccounts, onAccounts)
             NavPill(R.drawable.ic_settings_filled, "Ajustes", inSettings, onSettings)
+            NavPill(R.drawable.ic_checkroom, "Aparência", inAppearance, onAppearance)
         }
     }
 }

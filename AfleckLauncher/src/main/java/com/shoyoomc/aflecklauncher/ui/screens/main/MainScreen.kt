@@ -158,7 +158,11 @@ fun MainScreen(
     }
 
     val mainScreenKey = screenBackStackModel.mainScreen.currentKey
-    val inLauncherScreen = mainScreenKey == null || mainScreenKey is NormalNavKey.LauncherMain
+    val themeCtx = androidx.compose.ui.platform.LocalContext.current
+    remember { AfThemeState.load(themeCtx); true }
+    val bgSlot = rememberAfSlot("bg")
+    var showAppearance by remember { mutableStateOf(false) }
+    val inLauncherScreen = (mainScreenKey == null || mainScreenKey is NormalNavKey.LauncherMain) && !showAppearance
 
     val isBackgroundValid = LocalBackgroundViewModel.current?.isValid == true
     val launcherBackgroundOpacity = AllSettings.launcherBackgroundOpacity.state.toFloat() / 100f
@@ -172,22 +176,21 @@ fun MainScreen(
         color = backgroundColor,
         contentColor = onBackgroundColor()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .paint(painterResource(R.drawable.af_bg), contentScale = androidx.compose.ui.layout.ContentScale.Crop)
-                .background(Color(0x99041020))
-        ) {
+        Box(Modifier.fillMaxSize().background(Color.Black)) {
+        AfSlotImage(bgSlot, AfThemeState.current.bg, Modifier.fillMaxSize())
+        Box(Modifier.fillMaxSize().background(Color(0x59000000)))
+        Column(modifier = Modifier.fillMaxSize()) {
             AfTopBar(
                 sectionTitle = when {
                     inLauncherScreen -> "Início"
                     mainScreenKey is NormalNavKey.VersionsManager -> "Versões"
                     mainScreenKey is NestedNavKey.Download -> "Download"
                     mainScreenKey is NormalNavKey.AccountManager -> "Contas"
+                    showAppearance -> "Aparência"
                     mainScreenKey is NestedNavKey.Settings -> "Ajustes"
                     else -> "Afleck"
                 },
-                onLogo = toMainScreen,
+                onLogo = { showAppearance = false; toMainScreen() },
                 onFiles = {
                     eventViewModel.sendEvent(
                         EventViewModel.Event.OpenFileManager(
@@ -212,23 +215,28 @@ fun MainScreen(
                 inVersions = mainScreenKey is NormalNavKey.VersionsManager,
                 inDownload = mainScreenKey is NestedNavKey.Download,
                 inAccounts = mainScreenKey is NormalNavKey.AccountManager,
-                inSettings = mainScreenKey is NestedNavKey.Settings,
+                inSettings = mainScreenKey is NestedNavKey.Settings && !showAppearance,
+                inAppearance = showAppearance,
+                onAppearance = { showAppearance = true },
                 modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
-                onHome = toMainScreen,
+                onHome = { showAppearance = false; toMainScreen() },
                 onVersions = {
+                    showAppearance = false
                     screenBackStackModel.mainScreen.removeAndNavigateTo(
                         removes = screenBackStackModel.clearBeforeNavKeys,
                         screenKey = NormalNavKey.VersionsManager
                     )
                 },
-                onDownload = { screenBackStackModel.navigateToDownload() },
+                onDownload = { showAppearance = false; screenBackStackModel.navigateToDownload() },
                 onAccounts = {
+                    showAppearance = false
                     screenBackStackModel.mainScreen.removeAndNavigateTo(
                         removes = screenBackStackModel.clearBeforeNavKeys,
                         screenKey = NormalNavKey.AccountManager()
                     )
                 },
                 onSettings = {
+                    showAppearance = false
                     screenBackStackModel.mainScreen.removeAndNavigateTo(
                         removes = screenBackStackModel.clearBeforeNavKeys,
                         screenKey = screenBackStackModel.settingsScreen
@@ -248,8 +256,12 @@ fun MainScreen(
                         eventViewModel = eventViewModel,
                         modpackImportViewModel = modpackImportViewModel,
                         modifyVersionViewModel = modifyVersionViewModel,
-                        submitError = submitError
+                        submitError = submitError,
+                        onOpenAppearance = { showAppearance = true }
                     )
+                }
+                if (showAppearance) {
+                    AfAppearance(bgSlot = bgSlot, onClose = { showAppearance = false })
                 }
 
                 TaskMenu(
@@ -264,7 +276,9 @@ fun MainScreen(
                 }
             }
             }
+                }
         }
+
     }
 }
 
@@ -513,7 +527,8 @@ private fun NavigationUI(
     eventViewModel: EventViewModel,
     modpackImportViewModel: ModpackImportViewModel,
     modifyVersionViewModel: ModifyVersionViewModel,
-    submitError: (ErrorViewModel.ThrowableMessage) -> Unit
+    submitError: (ErrorViewModel.ThrowableMessage) -> Unit,
+    onOpenAppearance: () -> Unit
 ) {
     val backStack = screenBackStackModel.mainScreen.backStack
     val currentKey = backStack.lastOrNull()
@@ -561,6 +576,7 @@ private fun NavigationUI(
                         onOpenVersions = { screenBackStackModel.mainScreen.navigateTo(NormalNavKey.VersionsManager) },
                         onOpenAccounts = { screenBackStackModel.mainScreen.navigateTo(NormalNavKey.AccountManager()) },
                         onOpenDownload = { screenBackStackModel.navigateToDownload() },
+                        onOpenAppearance = onOpenAppearance,
                         onOpenSettings = {
                             screenBackStackModel.mainScreen.removeAndNavigateTo(
                                 removes = screenBackStackModel.clearBeforeNavKeys,

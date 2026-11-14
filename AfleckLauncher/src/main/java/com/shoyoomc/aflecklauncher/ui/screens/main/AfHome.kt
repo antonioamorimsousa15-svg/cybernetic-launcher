@@ -52,6 +52,7 @@ fun AfHome(
     onOpenAccounts: () -> Unit,
     onOpenDownload: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenAppearance: () -> Unit,
 ) {
     val homeSlot = rememberAfSlot("home")
     val slot916 = rememberAfSlot("card916")
@@ -62,7 +63,7 @@ fun AfHome(
     Box(Modifier.fillMaxSize()) {
         AfSlotImage(homeSlot, null, Modifier.fillMaxSize())
         AfHomeContent(
-            onPlay, onOpenVersions, onOpenAccounts, onOpenDownload, onOpenSettings,
+            onPlay, onOpenVersions, onOpenAccounts, onOpenDownload, onOpenSettings, onOpenAppearance,
             slot916, shadersSlot, modsSlot, onEdit = { dialog = it }
         )
     }
@@ -89,6 +90,7 @@ private fun AfHomeContent(
     onOpenAccounts: () -> Unit,
     onOpenDownload: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenAppearance: () -> Unit,
     slot916: AfImageSlot,
     shadersSlot: AfImageSlot,
     modsSlot: AfImageSlot,
@@ -211,7 +213,7 @@ private fun AfHomeContent(
                         QuickTile(Modifier.weight(1f), R.drawable.ic_dashboard_filled, "Layouts de HUD", onOpenSettings)
                     }
                     Row(Modifier.weight(1f).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        QuickTile(Modifier.weight(1f), R.drawable.ic_package_2_outlined, "Aparência", onOpenSettings)
+                        QuickTile(Modifier.weight(1f), R.drawable.ic_package_2_outlined, "Aparência", onOpenAppearance)
                         QuickTile(Modifier.weight(1f), R.drawable.ic_person_filled, "Contas", onOpenAccounts)
                     }
                 }
